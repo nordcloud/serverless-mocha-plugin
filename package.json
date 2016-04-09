@@ -1,0 +1,38 @@
+{
+  "name": "serverless-mocha-plugin",
+  "version": "0.5.0",
+  "engines": {
+    "node": ">=4.0"
+  },
+  "description": "Serverless plugin for test driven development using mocha",
+  "author": "serverless.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/"
+  },
+  "keywords": [
+    "serverless framework plugin",
+    "serverless applications",
+    "serverless plugins",
+    "api gateway",
+    "lambda",
+    "aws",
+    "aws lambda",
+    "mocha",
+    "amazon",
+    "amazon web services",
+    "serverless.com"
+  ],
+  "main": "index.js",
+  "bin": {},
+  "scripts": {},
+  "devDependencies": {
+  },
+  "dependencies": {
+    "bluebird": "3.0.6",
+    "chai": "3.2.0",
+    "mocha": "2.2.5",
+    "lambda-wrapper": "0.0.4"
+  }
+}
