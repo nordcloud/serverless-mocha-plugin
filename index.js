@@ -49,7 +49,6 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
     registerActions() {
 
-
       S.addAction(this._createAction.bind(this), {
         handler:       'customAction',
         description:   'Create mocha test for function',
@@ -81,8 +80,6 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
           }
         ]
       });
-
-      
       
       return BbPromise.resolve();
     }
