@@ -49,6 +49,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
     registerActions() {
 
+
       S.addAction(this._createAction.bind(this), {
         handler:       'customAction',
         description:   'Create mocha test for function',
@@ -80,6 +81,8 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
           }
         ]
       });
+
+      
       
       return BbPromise.resolve();
     }
@@ -106,15 +109,19 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       return createTest(evt.options.paths[0]);
     }
     
-       /**
+    /**
      * Custom action serverless function mocha-create functioName
      */
 
     _runAction(evt) {
+      let _this = this;
       return new BbPromise(function(resolve, reject) {
           let funcName = evt.options.paths;
           let mocha = new Mocha();
-          getFilePaths(evt.options.paths)
+          return _this._runBootstrap(evt)
+          .then(function() {
+            return getFilePaths(evt.options.paths)
+          })
           .then(function(paths) {
               paths.forEach(function(path,idx) {
                   mocha.addFile(path);
@@ -125,6 +132,30 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
           });
       });
     }
+
+     /**
+     * Run our Mocha bootstrap file if specified, or throw if it is specified
+     * and doesn't exist.
+     */
+
+    _runBootstrap(evt) {
+      let mochaCustoms = S.getProject().custom['serverless-mocha-plugin'];
+      if (!mochaCustoms.bootstrap) {
+        // We have no bootstrap file, continue
+        return BbPromise.resolve();
+      }
+
+      if (fs.existsSync(mochaCustoms.bootstrap) === false) {
+        // Bootstrap file has been specified, but does not exist.
+        return BbPromise.reject(new Error("Mocha bootstrap file does not exist."));
+      }
+
+      // File exists, require the file.
+      require(path.join(process.cwd(), mochaCustoms.bootstrap));
+      return BbPromise.resolve();
+    }
+
+
     /**
      * Hook for creating the mocha test placeholder after function creation
      */
