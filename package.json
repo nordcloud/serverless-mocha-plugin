@@ -1,11 +1,14 @@
 {
   "name": "serverless-mocha-plugin",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "engines": {
     "node": ">=4.0"
   },
   "description": "Serverless plugin for test driven development using mocha",
-  "author": "serverless.com",
+  "author": "Mikael Puittinen (https://sc5.io)",
+  "contributors": [
+    "Anssi Herranen (https://sc5.io)"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
