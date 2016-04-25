@@ -200,7 +200,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         });
         return resolve(paths);
     });
-  };
+  }
 
   // Returns the path to a function's test file
   function testFilePath(funcName) {
