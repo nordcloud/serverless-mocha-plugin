@@ -162,7 +162,9 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         console.log(evt.options.runtime);
         return;
       }
-      return createTest(evt.options.path);
+      let parsedPath = path.parse(evt.options.path);
+      let funcName = parsedPath.base;
+      return createTest(funcName);
     }
   }
 
