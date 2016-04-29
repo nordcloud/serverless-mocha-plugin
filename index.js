@@ -146,7 +146,11 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
                 }
                 mocha.reporter(reporter, reporterOptions)
               }
-              mocha.run();
+              mocha.run(function(failures){
+                process.on('exit', function () {
+                  process.exit(failures);  // exit with non-zero status if there were failures
+                });
+              });
           }, function(error) {
               return reject(error);
           });
