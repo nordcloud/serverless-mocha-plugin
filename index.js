@@ -115,18 +115,17 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       return new BbPromise(function(resolve, reject) {
           let funcName = evt.options.paths;
           let mocha = new Mocha();
-          SetEnvVars(evt.options.paths)
+          //This could pose as an issue if several functions share a common ENV name but different values.
+          SetEnvVars(evt.options.paths);
 
           getFilePaths(evt.options.paths)
           .then(function(paths) {
               paths.forEach(function(path,idx) {
                 
                 mocha.addFile(path);
-              })
+              });
               mocha.run();
-              UnsetEnvVars(evt.options.paths)
           }, function(error) {
-            UnsetEnvVars(evt.options.paths)
 
             return reject(error);
           });
@@ -156,19 +155,6 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       for (var key in fields) {
         process.env[fields[key]] = envVars[fields[key]];
       }  
-    });
-  }
-  
-  //Unset environment variables
-  function UnsetEnvVars(paths) {
-    paths.forEach(function(path, idx){
-      var funcName = Path.basename(path, '.js')
-      var func = S.getProject().getFunction(funcName).toObjectPopulated();
-      var envVars = func.environment
-      var fields = Object.keys(envVars);
-      for (var key in fields) {
-        delete process.env[fields[key]];
-      }
     });
   }
   
