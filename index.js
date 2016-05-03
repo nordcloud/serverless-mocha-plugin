@@ -117,13 +117,22 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
           getFilePaths(evt.options.paths)
           .then(function(paths) {
               paths.forEach(function(path,idx) {
-                  mocha.addFile(path);
+                SetEnvVars(path);
+                mocha.addFile(path);
               })
-              SetEnvVars();
               mocha.run();
-              UnsetEnvVars();
+              paths.forEach(function(path,idx) {
+                UnsetEnvVars(path);
+              });
           }, function(error) {
-              return reject(error);
+            getFilePaths(evt.options.paths)
+            .then(function(paths) {
+              paths.forEach(function(path,idx) {
+                UnsetEnvVars(path);
+              });
+            });
+            
+            return reject(error);
           });
       });
     }
@@ -143,20 +152,22 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
 
   //Set environment variables
-  function SetEnvVars() {
-    var envVars = S.classes.Function.environment
+  function SetEnvVars(path) {
+    var func = new S.classes.Function(null, path);
+    var envVars = func.environment
     for (var key in Object.keys(envVars)) {
       process.env[key] = envVars[key];
     }
   }
   
   //Unset environment variables
-  function UnsetEnvVars() {
-    var envVars = S.classes.Function.environment
-    for (var key in Object.keys(envVars)) {
-      delete process.env[key];
-    }
-  }  
+  function UnsetEnvVars(path) {
+      var func = new S.classes.Function(null, path);
+      var envVars = func.environment
+      for (var key in Object.keys(envVars)) {
+        delete process.env[key];
+      }
+  }
   
   // Create the test folder
   function createTestFolder() {
