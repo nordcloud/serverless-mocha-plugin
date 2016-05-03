@@ -119,7 +119,9 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
               paths.forEach(function(path,idx) {
                   mocha.addFile(path);
               })
+              SetEnvVars();
               mocha.run();
+              UnsetEnvVars();
           }, function(error) {
               return reject(error);
           });
@@ -139,6 +141,23 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     }
   }
 
+
+  //Set environment variables
+  function SetEnvVars() {
+    var envVars = S.classes.Function.environment
+    for (var key in Object.keys(envVars)) {
+      process.env[key] = envVars[key];
+    }
+  }
+  
+  //Unset environment variables
+  function UnsetEnvVars() {
+    var envVars = S.classes.Function.environment
+    for (var key in Object.keys(envVars)) {
+      delete process.env[key];
+    }
+  }  
+  
   // Create the test folder
   function createTestFolder() {
       return new BbPromise(function(resolve, reject) {
