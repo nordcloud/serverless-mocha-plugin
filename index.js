@@ -114,24 +114,19 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       return new BbPromise(function(resolve, reject) {
           let funcName = evt.options.paths;
           let mocha = new Mocha();
+          evt.options.paths.forEach(function(func, idx){ SetEnvVars(func); });
+
           getFilePaths(evt.options.paths)
           .then(function(paths) {
               paths.forEach(function(path,idx) {
-                SetEnvVars(path);
+                
                 mocha.addFile(path);
               })
               mocha.run();
-              paths.forEach(function(path,idx) {
-                UnsetEnvVars(path);
-              });
+              evt.options.paths.forEach(function(func, idx){ UnsetEnvVars(func); });
           }, function(error) {
-            getFilePaths(evt.options.paths)
-            .then(function(paths) {
-              paths.forEach(function(path,idx) {
-                UnsetEnvVars(path);
-              });
-            });
-            
+            evt.options.paths.forEach(function(func, idx){ UnsetEnvVars(func); });
+
             return reject(error);
           });
       });
@@ -152,8 +147,8 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
 
   //Set environment variables
-  function SetEnvVars(path) {
-    var func = new S.classes.Function(null, path);
+  function SetEnvVars(funcName) {
+    var func = S.getProject().getFunction(funcName);
     var envVars = func.environment
     for (var key in Object.keys(envVars)) {
       process.env[key] = envVars[key];
@@ -161,8 +156,8 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
   }
   
   //Unset environment variables
-  function UnsetEnvVars(path) {
-      var func = new S.classes.Function(null, path);
+  function UnsetEnvVars(funcName) {
+      var func = S.getProject().getFunction(funcName);
       var envVars = func.environment
       for (var key in Object.keys(envVars)) {
         delete process.env[key];
