@@ -153,6 +153,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     for (var key in Object.keys(envVars)) {
       process.env[key] = envVars[key];
     }
+    console.log(process.env);
   }
   
   //Unset environment variables
@@ -162,6 +163,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       for (var key in Object.keys(envVars)) {
         delete process.env[key];
       }
+      console.log(process.env);
   }
   
   // Create the test folder
