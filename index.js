@@ -10,6 +10,7 @@ const path  = require('path'),
   lambdaWrapper = require('lambda-wrapper'),
   Mocha = require('mocha'),
   chai = require('chai'),
+  Path = require('path'),
   BbPromise = require('bluebird'); // Serverless uses Bluebird Promises and we recommend you do to because they provide more than your average Promise :)
 
 const testFolder = 'test'; // Folder used my mocha for tests
@@ -114,14 +115,19 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       return new BbPromise(function(resolve, reject) {
           let funcName = evt.options.paths;
           let mocha = new Mocha();
+          //This could pose as an issue if several functions share a common ENV name but different values.
+          SetEnvVars(evt.options.paths);
+
           getFilePaths(evt.options.paths)
           .then(function(paths) {
               paths.forEach(function(path,idx) {
-                  mocha.addFile(path);
-              })
+                
+                mocha.addFile(path);
+              });
               mocha.run();
           }, function(error) {
-              return reject(error);
+
+            return reject(error);
           });
       });
     }
@@ -139,6 +145,19 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     }
   }
 
+  //Set environment variables
+  function SetEnvVars(paths) {
+    paths.forEach(function(path, idx){
+      var funcName = Path.basename(path, '.js')
+      var func = S.getProject().getFunction(funcName).toObjectPopulated();
+      var envVars = func.environment
+      var fields = Object.keys(envVars);
+      for (var key in fields) {
+        process.env[fields[key]] = envVars[fields[key]];
+      }  
+    });
+  }
+  
   // Create the test folder
   function createTestFolder() {
       return new BbPromise(function(resolve, reject) {
