@@ -71,8 +71,16 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         description:   'Create mocha test for function',
         context:       'function',
         contextAction: 'mocha-run',
-        options:       [{ // These must be specified in the CLI like this "-option true" or "-o true"
-        }],
+        options:       [          {
+            option:      'region',
+            shortcut:    'r',
+            description: 'region you want to run your function in'
+          },
+          {
+            option:      'stage',
+            shortcut:    's',
+            description: 'stage you want to run your function in'
+          }],
         parameters: [ // Use paths when you multiple values need to be input (like an array).  Input looks like this: "serverless custom run module1/function1 module1/function2 module1/function3.  Serverless will automatically turn this into an array and attach it to evt.options within your plugin
           {
             parameter: 'paths',
@@ -116,7 +124,14 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
           let funcName = evt.options.paths;
           let mocha = new Mocha();
           //This could pose as an issue if several functions share a common ENV name but different values.
-          SetEnvVars(evt.options.paths);
+          
+          let stage = evt.options.stage || S.getProject().getAllStages()[0].name;
+          let region = evt.options.region || S.getProject().getAllRegions(stage)[0].name;
+
+          SetEnvVars(evt.options.paths, {
+            stage: stage,
+            region: region
+          });
 
           getFilePaths(evt.options.paths)
           .then(function(paths) {
@@ -146,12 +161,13 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
   }
 
   //Set environment variables
-  function SetEnvVars(paths) {
+  function SetEnvVars(paths, config) {
     paths.forEach(function(path, idx){
-      var funcName = Path.basename(path, '.js')
-      var func = S.getProject().getFunction(funcName).toObjectPopulated();
-      var envVars = func.environment
+      var funcName = Path.basename(path, '.js');
+      var func = S.getProject().getFunction(funcName).toObjectPopulated(config);
+      var envVars = func.environment;
       var fields = Object.keys(envVars);
+      
       for (var key in fields) {
         process.env[fields[key]] = envVars[fields[key]];
       }  
