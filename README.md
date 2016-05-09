@@ -51,11 +51,14 @@ or using the mocha-run command
 sls function mocha-run [-s stage] [-r region] [function1] [function2] [...]
 ```
 
+To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be passed with the -O switch.
+
 If no function names are passed to mocha-run, all tests are run from the test/ directory
 
 ## Release History
 
 * 2016/05/09 - v0.5.3 - Set environment variables during mocha-run (by AniKo)
+                      - Add reporter options, return non-zero status for failures (by chouandy) 
 * 2016/04/09 - v0.5.0 - Initial version of module for serverless 0.5.*
 
 ## License
