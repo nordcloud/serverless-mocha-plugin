@@ -123,7 +123,9 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
     _createAction(evt) {
       if (S.getProject().getFunction(evt.options.paths[0]) === undefined) {
-        throw(new Error("Could not find function " + evt.options.paths[0]));
+        return new BbPromise(function(resolve, reject) {
+          reject(`MochaPluginError: Function ${evt.options.paths[0]} does not exist in your project`);
+        });
       }
 
       return createTest(evt.options.paths[0]);
