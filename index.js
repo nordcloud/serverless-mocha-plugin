@@ -51,7 +51,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     registerActions() {
 
       S.addAction(this._createAction.bind(this), {
-        handler:       'customAction',
+        handler:       '_createAction',
         description:   'Create mocha test for function',
         context:       'function',
         contextAction: 'mocha-create',
@@ -67,7 +67,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       });
 
       S.addAction(this._runAction.bind(this), {
-        handler:       'customAction',
+        handler:       '_runAction',
         description:   'Create mocha test for function',
         context:       'function',
         contextAction: 'mocha-run',
@@ -122,6 +122,10 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
      */
 
     _createAction(evt) {
+      if (S.getProject().getFunction(evt.options.paths[0]) === undefined) {
+        throw(new Error("Could not find function " + evt.options.paths[0]));
+      }
+
       return createTest(evt.options.paths[0]);
     }
 
@@ -163,7 +167,6 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
                     }
                   });
                 }
-                console.log(process.env);
                 mocha.reporter(reporter, reporterOptions)
               }
               mocha.run(function(failures){
@@ -189,6 +192,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       }
       let parsedPath = path.parse(evt.options.path);
       let funcName = parsedPath.base;
+
       return createTest(funcName);
     }
   }
@@ -272,7 +276,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
   // Returns the path to a function's test file
   function testFilePath(funcName) {
-      return path.join(testFolder, `${funcName.replace('/', '_')}.js`);
+      return path.join(testFolder, `${funcName.replace(/.*\//g, '')}.js`);
   }
 
   function newTestFile(funcName) {

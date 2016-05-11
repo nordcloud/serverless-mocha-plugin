@@ -57,6 +57,8 @@ If no function names are passed to mocha-run, all tests are run from the test/ d
 
 ## Release History
 
+* 2016/06/10 - v0.5.4 - Fix error message for mocha-create. 
+                      - Create tests with mocha-create without path in test name (as function create does)
 * 2016/05/09 - v0.5.3 - Set environment variables during mocha-run (by AniKo)
                       - Add reporter options, return non-zero status for failures (by chouandy) 
 * 2016/04/09 - v0.5.0 - Initial version of module for serverless 0.5.*
