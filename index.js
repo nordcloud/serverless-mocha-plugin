@@ -239,8 +239,8 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         let funcFilePath = testFilePath(funcName);
         let projectPath = S.getProject().getRootPath();
         let funcFullPath = S.getProject().getFunction(funcName).getRootPath();
-        let funcPath = path.relative(projectPath, funcFullPath);
-
+        let funcPath = path.relative(projectPath, funcFullPath).replace(/\\/g, '/');
+        
         fs.exists(funcFilePath, function (exists) {
            if (exists) {
                return reject(new Error(`File ${funcFilePath} already exists`));
