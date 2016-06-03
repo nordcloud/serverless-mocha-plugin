@@ -140,7 +140,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
           let funcName = evt.options.paths;
           let mocha = new Mocha();
           //This could pose as an issue if several functions share a common ENV name but different values.
-          
+
           let stage = evt.options.stage || S.getProject().getAllStages()[0].name;
           let region = evt.options.region || S.getProject().getAllRegions(stage)[0].name;
 
@@ -206,13 +206,13 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       var func = S.getProject().getFunction(funcName).toObjectPopulated(config);
       var envVars = func.environment;
       var fields = Object.keys(envVars);
-      
+
       for (var key in fields) {
         process.env[fields[key]] = envVars[fields[key]];
-      }  
+      }
     });
   }
-  
+
   // Create the test folder
   function createTestFolder() {
       return new BbPromise(function(resolve, reject) {
@@ -239,7 +239,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         let funcFilePath = testFilePath(funcName);
         let projectPath = S.getProject().getRootPath();
         let funcFullPath = S.getProject().getFunction(funcName).getRootPath();
-        let funcPath = path.relative(projectPath, funcFullPath);
+        let funcPath = path.relative(projectPath, funcFullPath).replace(/\\/g, "/");
 
         fs.exists(funcFilePath, function (exists) {
            if (exists) {
@@ -302,6 +302,7 @@ describe('${funcName}', () => {
   })
   
   it('implement tests here', (done) => {
+    wrapper.init(mod);
     wrapper.run({}, (err, response) => {
       done('no tests implemented');
     });
