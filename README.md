@@ -59,6 +59,7 @@ If no function names are passed to mocha-run, all tests are run from the test/ d
 
 * 2016/06/03 - v0.5.7 - Fix entangled function tests, Move wrapper.init into 'it' scope in generated mocha test code.
                       - Fix non-posix path separator in Windows.
+                      - set environment variables correctly also when running all tests
 * 2016/05/10 - v0.5.5 - Fix error message for mocha-create.
                       - Create tests with mocha-create without path in test name (as function create does)
 * 2016/05/09 - v0.5.3 - Set environment variables during mocha-run (by AniKo)
