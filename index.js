@@ -137,45 +137,48 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
     _runAction(evt) {
       return new BbPromise(function(resolve, reject) {
-          let funcName = evt.options.paths;
+          let functions = evt.options.paths;
           let mocha = new Mocha();
           //This could pose as an issue if several functions share a common ENV name but different values.
 
           let stage = evt.options.stage || S.getProject().getAllStages()[0].name;
           let region = evt.options.region || S.getProject().getAllRegions(stage)[0].name;
-
-          SetEnvVars(evt.options.paths, {
-            stage: stage,
-            region: region
-          });
-
-          getFilePaths(evt.options.paths)
+          
+          getFunctions(functions)
+          .then(getFilePaths)
           .then(function(paths) {
-              paths.forEach(function(path,idx) {
-                mocha.addFile(path);
-              })
-              var reporter = evt.options.reporter;
-              if ( reporter !== null) {
-                var reporterOptions = {};
-                if (evt.options["reporter-options"] !== null) {
-                  evt.options["reporter-options"].split(",").forEach(function(opt) {
-                    var L = opt.split("=");
-                    if (L.length > 2 || L.length === 0) {
-                      throw new Error("invalid reporter option '" + opt + "'");
-                    } else if (L.length === 2) {
-                      reporterOptions[L[0]] = L[1];
-                    } else {
-                      reporterOptions[L[0]] = true;
-                    }
-                  });
-                }
-                mocha.reporter(reporter, reporterOptions)
-              }
-              mocha.run(function(failures){
-                process.on('exit', function () {
-                  process.exit(failures);  // exit with non-zero status if there were failures
-                });
+            if (paths.length === 0) {
+              return reject('No tests to run.');
+            }
+            paths.forEach(function(func,idx) {
+              SetEnvVars(func, {
+                stage: stage,
+                region: region
               });
+              mocha.addFile(func.mochaPlugin.testPath);
+            })
+            var reporter = evt.options.reporter;
+            if ( reporter !== null) {
+              var reporterOptions = {};
+              if (evt.options["reporter-options"] !== null) {
+                evt.options["reporter-options"].split(",").forEach(function(opt) {
+                  var L = opt.split("=");
+                  if (L.length > 2 || L.length === 0) {
+                    throw new Error("invalid reporter option '" + opt + "'");
+                  } else if (L.length === 2) {
+                    reporterOptions[L[0]] = L[1];
+                  } else {
+                    reporterOptions[L[0]] = true;
+                  }
+                });
+              }
+              mocha.reporter(reporter, reporterOptions)
+            }
+            mocha.run(function(failures){
+              process.on('exit', function () {
+                process.exit(failures);  // exit with non-zero status if there were failures
+              });
+            });
           }, function(error) {
 
             return reject(error);
@@ -189,7 +192,6 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     _hookPostFuncCreate(evt) {
       // TODO: only run with runtime node4.3
       if (evt.options.runtime != 'nodejs4.3') {
-        console.log(evt.options.runtime);
         return;
       }
       let parsedPath = path.parse(evt.options.path);
@@ -200,17 +202,14 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
   }
 
   //Set environment variables
-  function SetEnvVars(paths, config) {
-    paths.forEach(function(path, idx){
-      var funcName = Path.basename(path, '.js');
-      var func = S.getProject().getFunction(funcName).toObjectPopulated(config);
-      var envVars = func.environment;
-      var fields = Object.keys(envVars);
+  function SetEnvVars(func, config) {
+    var envVars = func.toObjectPopulated(config);
+    var fields = Object.keys(envVars);
 
-      for (var key in fields) {
-        process.env[fields[key]] = envVars[fields[key]];
-      }
-    });
+    for (var key in fields) {
+      process.env[fields[key]] = envVars[fields[key]];
+    }
+    return process.env;
   }
 
   // Create the test folder
@@ -257,25 +256,45 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     });
   }
 
+  // getFunctions. If no functions provided, returns all files
+  function getFunctions(funcNames) {
+    return new BbPromise(function(resolve, reject) {
+      let funcObjs = [];
+      if (funcNames.length === 0) {
+        let sFuncs = S.getProject().getAllFunctions();
+
+        return resolve(sFuncs);
+      }
+      
+      let func;
+      funcNames.forEach(function(funcName, idx) {
+        func = S.getProject().getFunction(funcName);
+        if (func) {
+          funcObjs.push(func);
+        } else {
+          console.log(`Warning: Could not find function '${funcName}'.`);
+        }
+      });
+      resolve(funcObjs);
+    });
+  };
+  
   // getTestFiles. If no functions provided, returns all files
   function getFilePaths(funcs) {
+   // console.log(funcs);
     return new BbPromise(function(resolve, reject) {
         var paths = [];
-
+        
         if (funcs && (funcs.length > 0)) {
             funcs.forEach(function(val, idx) {
-                paths.push(testFilePath(val));
+              val.mochaPlugin = {
+                testPath: testFilePath(val.name)
+              };
+              paths.push(val);
             });
             return resolve(paths);
         }
-        // No funcs provided, list all test files
-        fs.readdirSync(testFolder).filter(function(file){
-          // Only keep the .js files
-          return file.substr(-3) === '.js';
-        }).forEach(function(file) {
-            paths.push(path.join(testFolder, file));
-        });
-        return resolve(paths);
+        return resolve([]);
     });
   };
 
