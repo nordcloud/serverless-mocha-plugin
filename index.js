@@ -294,9 +294,13 @@ const mochaPlugin = require('serverless-mocha-plugin');
 const wrapper     = mochaPlugin.lambdaWrapper;
 const expect      = mochaPlugin.chai.expect;
 
-wrapper.init(mod);
-
 describe('${funcName}', () => {
+  before(function (done) {
+    wrapper.init(mod);
+
+    done()
+  })
+  
   it('implement tests here', (done) => {
     wrapper.run({}, (err, response) => {
       done('no tests implemented');
