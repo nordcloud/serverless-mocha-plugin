@@ -144,13 +144,13 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
           let stage = evt.options.stage || S.getProject().getAllStages()[0].name;
           let region = evt.options.region || S.getProject().getAllRegions(stage)[0].name;
 
-          SetEnvVars(evt.options.paths, {
-            stage: stage,
-            region: region
-          });
-
           getFilePaths(evt.options.paths)
           .then(function(paths) {
+              SetEnvVars(paths, {
+                stage: stage,
+                region: region
+              });
+    
               paths.forEach(function(path,idx) {
                 mocha.addFile(path);
               })
