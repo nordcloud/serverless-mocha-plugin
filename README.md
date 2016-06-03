@@ -1,7 +1,7 @@
 # Serverless Mocha Plugin
 
 A Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which
-adds support for test driven development using [mocha](https://mochajs.org/) 
+adds support for test driven development using [mocha](https://mochajs.org/)
 
 **THIS PLUGIN REQUIRES SERVERLESS V0.5 OR HIGHER!**
 
@@ -57,10 +57,12 @@ If no function names are passed to mocha-run, all tests are run from the test/ d
 
 ## Release History
 
-* 2016/06/10 - v0.5.5 - Fix error message for mocha-create. 
+* 2016/06/03 - v0.5.7 - Fix entangled function tests, Move wrapper.init into 'it' scope in generated mocha test code.
+                      - Fix non-posix path separator in Windows.
+* 2016/05/10 - v0.5.5 - Fix error message for mocha-create.
                       - Create tests with mocha-create without path in test name (as function create does)
 * 2016/05/09 - v0.5.3 - Set environment variables during mocha-run (by AniKo)
-                      - Add reporter options, return non-zero status for failures (by chouandy) 
+                      - Add reporter options, return non-zero status for failures (by chouandy)
 * 2016/04/09 - v0.5.0 - Initial version of module for serverless 0.5.*
 
 ## License
