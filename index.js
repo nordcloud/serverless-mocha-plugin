@@ -143,7 +143,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
           let stage = evt.options.stage || S.getProject().getAllStages()[0].name;
           let region = evt.options.region || S.getProject().getAllRegions(stage)[0].name;
-          
+
           getFunctions(functions)
           .then(getFilePaths)
           .then(function(paths) {
@@ -203,7 +203,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
   //Set environment variables
   function SetEnvVars(func, config) {
-    var envVars = func.toObjectPopulated(config);
+    var envVars = func.toObjectPopulated(config).environment;
     var fields = Object.keys(envVars);
 
     for (var key in fields) {
@@ -265,7 +265,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
         return resolve(sFuncs);
       }
-      
+
       let func;
       funcNames.forEach(function(funcName, idx) {
         func = S.getProject().getFunction(funcName);
@@ -278,13 +278,13 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       resolve(funcObjs);
     });
   };
-  
+
   // getTestFiles. If no functions provided, returns all files
   function getFilePaths(funcs) {
    // console.log(funcs);
     return new BbPromise(function(resolve, reject) {
         var paths = [];
-        
+
         if (funcs && (funcs.length > 0)) {
             funcs.forEach(function(val, idx) {
               val.mochaPlugin = {
