@@ -138,7 +138,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     _runAction(evt) {
       return new BbPromise(function(resolve, reject) {
           let funcName = evt.options.paths;
-          let mocha = new Mocha();
+          let mocha = new Mocha({timeout: 5000});
           //This could pose as an issue if several functions share a common ENV name but different values.
 
           let stage = evt.options.stage || S.getProject().getAllStages()[0].name;
