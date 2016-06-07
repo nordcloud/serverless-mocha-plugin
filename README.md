@@ -57,7 +57,7 @@ If no function names are passed to mocha-run, all tests are run from the test/ d
 
 ## Release History
 
-* 2016/05/17 - v0.5.9 - Set timeout to 5000 ms.
+* 2016/06/07 - v2.0.0 - Set timeout to 5000 ms.
 * 2016/05/17 - v0.5.8 - Fix entangled function tests.
                       - Move wrapper.init into 'it' scope in generated mocha test code.
 * 2016/05/17 - v0.5.7 - Fix non-posix path separator in Windows.
