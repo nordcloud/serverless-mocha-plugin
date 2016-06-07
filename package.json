@@ -1,6 +1,6 @@
 {
   "name": "serverless-mocha-plugin",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "engines": {
     "node": ">=4.0"
   },
@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SC5/serverless-mocha-plugin.git"
+    "url": "git+https://github.com/integratedresearch/serverless-mocha-plugin.git"
   },
   "keywords": [
     "serverless framework plugin",
@@ -47,9 +47,9 @@
   "readmeFilename": "README.md",
   "gitHead": "527508d798c1132afb712319ef79c1e340741080",
   "bugs": {
-    "url": "https://github.com/SC5/serverless-mocha-plugin/issues"
+    "url": "https://github.com/integratedresearch/serverless-mocha-plugin/issues"
   },
-  "homepage": "https://github.com/SC5/serverless-mocha-plugin#readme",
+  "homepage": "https://github.com/integratedresearch/serverless-mocha-plugin#readme",
   "_id": "serverless-mocha-plugin@0.5.8",
   "_shasum": "6a53448c556c9fbbc0d788b389f52741703df59d",
   "_from": "serverless-mocha-plugin@latest"
