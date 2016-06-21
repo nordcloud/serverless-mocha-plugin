@@ -178,6 +178,14 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
               process.on('exit', function () {
                 process.exit(failures);  // exit with non-zero status if there were failures
               });
+            }).on('suite', function(suite) {
+              let funcName = funcNameFromPath(suite.file);
+              let func = S.getProject().getFunction(funcName);
+
+              SetEnvVars(func, {
+                stage: stage,
+                region: region
+              });
             });
           }, function(error) {
 
@@ -301,6 +309,12 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
   // Returns the path to a function's test file
   function testFilePath(funcName) {
       return path.join(testFolder, `${funcName.replace(/.*\//g, '')}.js`);
+  }
+
+  function funcNameFromPath(filePath) {
+    let data = path.parse(filePath)
+
+    return data.name
   }
 
   function newTestFile(funcName, funcPath) {
