@@ -16,7 +16,6 @@ const path  = require('path'),
 const testFolder = 'test'; // Folder used my mocha for tests
 
 module.exports = function(S) { // Always pass in the ServerlessPlugin Class
-
   /**
    * Adding/Manipulating Serverless classes
    * - You can add or manipulate Serverless classes like this
@@ -41,6 +40,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     constructor() {
       super();
       this.name = 'io.sc5.mocha';
+      this.testFileMap = {};
     }
 
     /**
@@ -179,7 +179,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
                 stage: stage,
                 region: region
               });
-
+              _this.testFileMap[funcNameFromPath(func.mochaPlugin.testPath)] = func;
               mocha.addFile(func.mochaPlugin.testPath);
             })
             var reporter = _this.evt.options.reporter;
@@ -206,7 +206,8 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
             })
               .on('suite', function(suite) {
                 let funcName = funcNameFromPath(suite.file);
-                let func = S.getProject().getFunction(funcName);
+                
+                let func = _this.testFileMap[funcName];
 
                 if (func) {
                   SetEnvVars(func, {
