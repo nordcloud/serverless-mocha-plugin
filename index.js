@@ -355,15 +355,20 @@ const mochaPlugin = require('serverless-mocha-plugin');
 const wrapper     = mochaPlugin.lambdaWrapper;
 const expect      = mochaPlugin.chai.expect;
 
+const liveFunction = {
+  region: process.env.SERVERLESS_REGION,
+  lambdaFunction: process.env.SERVERLESS_PROJECT + '${funcName}'
+}
+
 describe('${funcName}', () => {
   before(function (done) {
+//  wrapper.init(liveFunction); // Run the deployed lambda 
     wrapper.init(mod);
 
     done()
   })
   
   it('implement tests here', (done) => {
-    wrapper.init(mod);
     wrapper.run({}, (err, response) => {
       done('no tests implemented');
     });
