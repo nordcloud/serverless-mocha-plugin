@@ -150,7 +150,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
             if (paths.length === 0) {
               return reject('No tests to run.');
             }
-            paths.forEach(function(func,idx) {
+            paths.forEach(function(func) {
               SetEnvVars(func, {
                 stage: stage,
                 region: region
@@ -178,14 +178,15 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
               process.on('exit', function () {
                 process.exit(failures);  // exit with non-zero status if there were failures
               });
-            }).on('suite', function(suite) {
+            }).on('suite', function(suite) { // reset environment variables
               let funcName = funcNameFromPath(suite.file);
               let func = S.getProject().getFunction(funcName);
-
-              SetEnvVars(func, {
-                stage: stage,
-                region: region
-              });
+              if (func) {
+                SetEnvVars(func, {
+                  stage: stage,
+                  region: region
+                });
+              }
             });
           }, function(error) {
 
