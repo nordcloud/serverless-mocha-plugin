@@ -16,7 +16,6 @@ const path  = require('path'),
 const testFolder = 'test'; // Folder used my mocha for tests
 
 module.exports = function(S) { // Always pass in the ServerlessPlugin Class
-
   /**
    * Adding/Manipulating Serverless classes
    * - You can add or manipulate Serverless classes like this
@@ -41,6 +40,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
     constructor() {
       super();
       this.name = 'io.sc5.mocha';
+      this.testFileMap = {};
     }
 
     /**
@@ -131,37 +131,62 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       return createTest(evt.options.paths[0]);
     }
 
-    /**
-     * Custom action serverless function mocha-create functioName
-     */
-
     _runAction(evt) {
+      let _this = this;
+      _this.evt = evt;
+      _this.evt.options.stage = _this.evt.options.stage ? _this.evt.options.stage : null;
+
+      return BbPromise.try(function() {
+      })
+        .bind(_this)
+        .then(function() {
+          return _this.cliPromptSelectStage('Choose a Stage: ', _this.evt.options.stage, false)
+            .then(stage => {
+              _this.evt.options.stage = stage;
+            })
+        })
+        .then(function() {
+          return _this.cliPromptSelectRegion('Choose a Region in this Stage: ', false, true, _this.evt.options.region, _this.evt.options.stage)
+            .then(region => {
+              _this.evt.options.region = region;
+            })
+        })
+        .then(_this._runTests)
+        .then(function() {
+          return _this.evt;
+        });
+    }
+
+    _runTests() {
+      let _this = this;
+
       return new BbPromise(function(resolve, reject) {
-          let functions = evt.options.paths;
-          let mocha = new Mocha();
-          //This could pose as an issue if several functions share a common ENV name but different values.
+        let functions = _this.evt.options.paths;
+        let mocha = new Mocha();
+        //This could pose as an issue if several functions share a common ENV name but different values.
 
-          let stage = evt.options.stage || S.getProject().getAllStages()[0].name;
-          let region = evt.options.region || S.getProject().getAllRegions(stage)[0].name;
+        let stage = _this.evt.options.stage;
+        let region = _this.evt.options.region;
 
-          getFunctions(functions)
+        getFunctions(functions)
           .then(getFilePaths)
           .then(function(paths) {
             if (paths.length === 0) {
               return reject('No tests to run.');
             }
-            paths.forEach(function(func,idx) {
+            paths.forEach(function(func) {
               SetEnvVars(func, {
                 stage: stage,
                 region: region
               });
+              _this.testFileMap[funcNameFromPath(func.mochaPlugin.testPath)] = func;
               mocha.addFile(func.mochaPlugin.testPath);
             })
-            var reporter = evt.options.reporter;
+            var reporter = _this.evt.options.reporter;
             if ( reporter !== null) {
               var reporterOptions = {};
-              if (evt.options["reporter-options"] !== null) {
-                evt.options["reporter-options"].split(",").forEach(function(opt) {
+              if (_this.evt.options["reporter-options"] !== null) {
+                _this.evt.options["reporter-options"].split(",").forEach(function(opt) {
                   var L = opt.split("=");
                   if (L.length > 2 || L.length === 0) {
                     throw new Error("invalid reporter option '" + opt + "'");
@@ -178,13 +203,26 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
               process.on('exit', function () {
                 process.exit(failures);  // exit with non-zero status if there were failures
               });
-            });
+            })
+              .on('suite', function(suite) {
+                let funcName = funcNameFromPath(suite.file);
+                
+                let func = _this.testFileMap[funcName];
+
+                if (func) {
+                  SetEnvVars(func, {
+                    stage: stage,
+                    region: region
+                  });
+                }
+              });
           }, function(error) {
 
             return reject(error);
           });
       });
     }
+
     /**
      * Hook for creating the mocha test placeholder after function creation
      */
@@ -215,17 +253,16 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
   // Create the test folder
   function createTestFolder() {
       return new BbPromise(function(resolve, reject) {
-
         fs.exists(testFolder, function(exists) {
-            if (exists) {
-                return resolve(testFolder);
+          if (exists) {
+            return resolve(testFolder);
+          }
+          fs.mkdir(testFolder, function(err) {
+            if (err) {
+              return reject(err);
             }
-            fs.mkdir(testFolder, function(err) {
-                if (err) {
-                    return reject(err);
-                }
-                return resolve(testFolder);
-            })
+            return resolve(testFolder);
+          })
         })
       });
   }
@@ -241,16 +278,16 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         let funcPath = path.relative(projectPath, funcFullPath).replace(/\\/g, "/");
 
         fs.exists(funcFilePath, function (exists) {
-           if (exists) {
-               return reject(new Error(`File ${funcFilePath} already exists`));
-           }
-           fs.writeFile(funcFilePath, newTestFile(funcName, funcPath), function(err) {
-               if (err) {
-                   return reject(new Error(`Creating file ${funcFilePath} failed: ${err}`));
-               }
-               console.log(`serverless-mocha-plugin: created ${funcFilePath}`);
-               return resolve(funcFilePath);
-           })
+            if (exists) {
+              return reject(new Error(`File ${funcFilePath} already exists`));
+            }
+            fs.writeFile(funcFilePath, newTestFile(funcName, funcPath), function(err) {
+              if (err) {
+                return reject(new Error(`Creating file ${funcFilePath} failed: ${err}`));
+              }
+              console.log(`serverless-mocha-plugin: created ${funcFilePath}`);
+              return resolve(funcFilePath);
+            })
         });
       });
     });
@@ -281,7 +318,6 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
   // getTestFiles. If no functions provided, returns all files
   function getFilePaths(funcs) {
-   // console.log(funcs);
     return new BbPromise(function(resolve, reject) {
         var paths = [];
 
@@ -301,6 +337,12 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
   // Returns the path to a function's test file
   function testFilePath(funcName) {
       return path.join(testFolder, `${funcName.replace(/.*\//g, '')}.js`);
+  }
+
+  function funcNameFromPath(filePath) {
+    let data = path.parse(filePath)
+
+    return data.name
   }
 
   function newTestFile(funcName, funcPath) {
