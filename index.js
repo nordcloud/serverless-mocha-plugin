@@ -357,7 +357,7 @@ const expect      = mochaPlugin.chai.expect;
 
 const liveFunction = {
   region: process.env.SERVERLESS_REGION,
-  lambdaFunction: process.env.SERVERLESS_PROJECT + '${funcName}'
+  lambdaFunction: process.env.SERVERLESS_PROJECT + '-${funcName}'
 }
 
 describe('${funcName}', () => {
