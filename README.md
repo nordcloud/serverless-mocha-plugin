@@ -42,6 +42,12 @@ Functions can also be added manually using the mocha-create command
 sls function mocha-create functionName
 ```
 
+If you want to run the tests against the real Lambda functions, you can pass the liveFunction object to wrapper.init().
+
+```
+  wrapper.init(liveFunction);
+```
+
 ### Running tests
 
 Tests can be run directly using Mocha (in which case it needs to be installed to your project or globally)
@@ -56,6 +62,7 @@ To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be 
 If no function names are passed to mocha-run, all tests are run from the test/ directory
 
 ## Release History
+* 2016/06/22 - v0.5.11 - Add support for running tests from live environment
 * 2016/06/21 - v0.5.9 - Prompt for region / stage when running tests. Set environment separately for each test
 * 2016/06/03 - v0.5.7 - Fix entangled function tests, Move wrapper.init into 'it' scope in generated mocha test code.
                       - Fix non-posix path separator in Windows.
