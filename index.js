@@ -11,9 +11,11 @@ const path  = require('path'),
   Mocha = require('mocha'),
   chai = require('chai'),
   Path = require('path'),
+  ejs = require('ejs'),
   BbPromise = require('bluebird'); // Serverless uses Bluebird Promises and we recommend you do to because they provide more than your average Promise :)
 
 const testFolder = 'test'; // Folder used my mocha for tests
+const templateFilename = 'sls-mocha-plugin-template.ejs';
 
 module.exports = function(S) { // Always pass in the ServerlessPlugin Class
   /**
@@ -55,7 +57,10 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         description:   'Create mocha test for function',
         context:       'function',
         contextAction: 'mocha-create',
-        options:       [{ // These must be specified in the CLI like this "-option true" or "-o true"
+        options:       [{
+          options:      'template',
+          shortcut:     'T',
+          description:  'name of a template file used when creating test'
         }],
         parameters: [ // Use paths when you multiple values need to be input (like an array).  Input looks like this: "serverless custom run module1/function1 module1/function2 module1/function3.  Serverless will automatically turn this into an array and attach it to evt.options within your plugin
           {
@@ -68,7 +73,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
       S.addAction(this._runAction.bind(this), {
         handler:       '_runAction',
-        description:   'Create mocha test for function',
+        description:   'Runs mocha test for function',
         context:       'function',
         contextAction: 'mocha-run',
         options:       [          {
@@ -206,7 +211,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
             })
               .on('suite', function(suite) {
                 let funcName = funcNameFromPath(suite.file);
-                
+
                 let func = _this.testFileMap[funcName];
 
                 if (func) {
@@ -235,7 +240,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       let parsedPath = path.parse(evt.options.path);
       let funcName = parsedPath.base;
 
-      return createTest(funcName);
+      return createTest(funcName, templateFilename);
     }
   }
 
@@ -269,7 +274,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
   // Create the test file (and test folder)
 
-  function createTest(funcName) {
+  function createTest(funcName, templateFilename) {
     return createTestFolder().then(function(testFolder) {
       return new BbPromise(function(resolve, reject) {
         let funcFilePath = testFilePath(funcName);
@@ -281,13 +286,24 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
             if (exists) {
               return reject(new Error(`File ${funcFilePath} already exists`));
             }
-            fs.writeFile(funcFilePath, newTestFile(funcName, funcPath), function(err) {
-              if (err) {
-                return reject(new Error(`Creating file ${funcFilePath} failed: ${err}`));
-              }
-              console.log(`serverless-mocha-plugin: created ${funcFilePath}`);
-              return resolve(funcFilePath);
-            })
+
+          let templateFilenamePath = path.join(testFolder, templateFilename);
+          fs.exists(templateFilenamePath, function (exists) {
+            let templateString = exists ? getTemplateFromFile(templateFilenamePath) : getTemplateFromString();
+  
+              let content = ejs.render(templateString, {
+                'functionName': funcName,
+                'functionPath': funcPath
+              });
+
+              fs.writeFile(funcFilePath, content, function(err) {
+                if (err) {
+                  return reject(new Error(`Creating file ${funcFilePath} failed: ${err}`));
+                }
+                console.log(`serverless-mocha-plugin: created ${funcFilePath}`);
+                return resolve(funcFilePath);
+              })
+            });
         });
       });
     });
@@ -314,7 +330,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
       });
       resolve(funcObjs);
     });
-  };
+  }
 
   // getTestFiles. If no functions provided, returns all files
   function getFilePaths(funcs) {
@@ -332,7 +348,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         }
         return resolve([]);
     });
-  };
+  }
 
   // Returns the path to a function's test file
   function testFilePath(funcName) {
@@ -340,27 +356,31 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
   }
 
   function funcNameFromPath(filePath) {
-    let data = path.parse(filePath)
+    let data = path.parse(filePath);
 
     return data.name
   }
 
-  function newTestFile(funcName, funcPath) {
-      return `'use strict';
-// tests for ${funcName}
+  function getTemplateFromFile(templateFilenamePath) {
+    return fs.readFileSync(templateFilenamePath, 'utf-8');
+  }
+
+  function getTemplateFromString() {
+    return `'use strict';
+// tests for <%= functionName %>
 // Generated by serverless-mocha-plugin
 
-const mod         = require('../${funcPath}/handler.js');
+const mod         = require('../<%= functionPath %>/handler.js');
 const mochaPlugin = require('serverless-mocha-plugin');
 const wrapper     = mochaPlugin.lambdaWrapper;
 const expect      = mochaPlugin.chai.expect;
 
 const liveFunction = {
   region: process.env.SERVERLESS_REGION,
-  lambdaFunction: process.env.SERVERLESS_PROJECT + '-${funcName}'
+  lambdaFunction: process.env.SERVERLESS_PROJECT + '-<%= functionName %>'
 }
 
-describe('${funcName}', () => {
+describe('<%= functionName %>', () => {
   before(function (done) {
 //  wrapper.init(liveFunction); // Run the deployed lambda 
     wrapper.init(mod);

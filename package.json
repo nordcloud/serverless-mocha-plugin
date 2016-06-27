@@ -37,6 +37,7 @@
     "bluebird": "3.0.6",
     "chai": "3.2.0",
     "mocha": "2.2.5",
-    "lambda-wrapper": "^0.1.0"
+    "lambda-wrapper": "^0.1.0",
+    "ejs": "^2.4.2"
   }
 }
