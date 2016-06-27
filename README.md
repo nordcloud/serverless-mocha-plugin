@@ -73,6 +73,7 @@ If you'd like to get more information on the template engine, you check document
 
 
 ## Release History
+* 2016/06/27 - v0.5.12 - Add support for using template test files
 * 2016/06/22 - v0.5.11 - Add support for running tests from live environment
 * 2016/06/21 - v0.5.9 - Prompt for region / stage when running tests. Set environment separately for each test
 * 2016/06/03 - v0.5.7 - Fix entangled function tests, Move wrapper.init into 'it' scope in generated mocha test code.
