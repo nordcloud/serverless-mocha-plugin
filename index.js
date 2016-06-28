@@ -167,7 +167,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
       return new BbPromise(function(resolve, reject) {
         let functions = _this.evt.options.paths;
-        let mocha = new Mocha();
+        let mocha = new Mocha({timeout: 6000});
         //This could pose as an issue if several functions share a common ENV name but different values.
 
         let stage = _this.evt.options.stage;

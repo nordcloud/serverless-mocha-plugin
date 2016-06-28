@@ -61,6 +61,9 @@ To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be 
 
 If no function names are passed to mocha-run, all tests are run from the test/ directory
 
+The default timeout for tests is 6 seconds. In case you need to apply a different timeout, that can be done in the test file 
+using using this.timeout(milliseconds) in the define, after, before or it -blocks.
+
 ### Using own template for a test file
 
 If you'd like to use your own template for a generated test file, create a sls-mocha-plugin-template.ejs file
@@ -73,6 +76,7 @@ If you'd like to get more information on the template engine, you check document
 
 
 ## Release History
+* 2016/06/28 - v0.5.13 - Increase default test timeout to 6000ms
 * 2016/06/27 - v0.5.12 - Add support for using template test files
 * 2016/06/22 - v0.5.11 - Add support for running tests from live environment
 * 2016/06/21 - v0.5.9 - Prompt for region / stage when running tests. Set environment separately for each test
