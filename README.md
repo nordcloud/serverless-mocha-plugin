@@ -42,6 +42,12 @@ Functions can also be added manually using the mocha-create command
 sls function mocha-create functionName
 ```
 
+If you want to run the tests against the real Lambda functions, you can pass the liveFunction object to wrapper.init().
+
+```
+  wrapper.init(liveFunction);
+```
+
 ### Running tests
 
 Tests can be run directly using Mocha (in which case it needs to be installed to your project or globally)
@@ -55,13 +61,24 @@ To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be 
 
 If no function names are passed to mocha-run, all tests are run from the test/ directory
 
-## Release History
+### Using own template for a test file
 
-* 2016/06/07 - v2.0.1 - Set timeout to 5000 ms.
-* 2016/05/17 - v0.5.8 - Fix entangled function tests.
-                      - Move wrapper.init into 'it' scope in generated mocha test code.
-* 2016/05/17 - v0.5.7 - Fix non-posix path separator in Windows.
-                      - Replace with forward slash in path.relative.
+If you'd like to use your own template for a generated test file, create a sls-mocha-plugin-template.ejs file
+in the test/ directory. Currently, there are two variables available for use:
+
+- functionName - name of the function
+- functionPath - path to the function
+
+If you'd like to get more information on the template engine, you check documentation of the [EJS project](http://ejs.co/).
+
+
+## Release History
+* 2016/06/27 - v0.5.12 - Add support for using template test files
+* 2016/06/22 - v0.5.11 - Add support for running tests from live environment
+* 2016/06/21 - v0.5.9 - Prompt for region / stage when running tests. Set environment separately for each test
+* 2016/06/03 - v0.5.7 - Fix entangled function tests, Move wrapper.init into 'it' scope in generated mocha test code.
+                      - Fix non-posix path separator in Windows.
+                      - set environment variables correctly also when running all tests
 * 2016/05/10 - v0.5.5 - Fix error message for mocha-create.
                       - Create tests with mocha-create without path in test name (as function create does)
 * 2016/05/09 - v0.5.3 - Set environment variables during mocha-run (by AniKo)

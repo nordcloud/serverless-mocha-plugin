@@ -1,24 +1,19 @@
 {
   "name": "serverless-mocha-plugin",
-  "version": "2.0.1",
+  "version": "2.5.12",
   "engines": {
     "node": ">=4.0"
   },
   "description": "Serverless plugin for test driven development using mocha",
-  "author": {
-    "name": "Mikael Puittinen",
-    "url": "https://sc5.io"
-  },
+  "author": "Mikael Puittinen (https://sc5.io)",
   "contributors": [
-    {
-      "name": "Anssi Herranen",
-      "url": "https://sc5.io"
-    }
+    "Anssi Herranen (https://sc5.io)",
+    "Rafał Janicki"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/integratedresearch/serverless-mocha-plugin.git"
+    "url": "https://github.com/SC5/serverless-mocha-plugin"
   },
   "keywords": [
     "serverless framework plugin",
@@ -36,21 +31,14 @@
   "main": "index.js",
   "bin": {},
   "scripts": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.4.0"
+  },
   "dependencies": {
     "bluebird": "3.0.6",
     "chai": "3.2.0",
     "mocha": "2.2.5",
-    "lambda-wrapper": "^0.0.6"
-  },
-  "readme": "# Serverless Mocha Plugin\r\n\r\nA Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which\r\nadds support for test driven development using [mocha](https://mochajs.org/)\r\n\r\n**THIS PLUGIN REQUIRES SERVERLESS V0.5 OR HIGHER!**\r\n\r\n## Introduction\r\n\r\nThis plugins does the following:\r\n\r\n* It will create test files when creating new serverless functions\r\n\r\n* It provides commands to create and run tests manually\r\n\r\n## Installation\r\n\r\nIn your project root, run:\r\n\r\n```bash\r\nnpm install --save serverless-mocha-plugin\r\n```\r\n\r\nAdd the plugin to `s-project.json`:\r\n\r\n```json\r\n\"plugins\": [\r\n  \"serverless-mocha-plugin\"\r\n]\r\n```\r\n\r\n## Usage\r\n\r\n### Creating tests\r\n\r\nWhen the plug-in is installed, tests are automatically created to the test/ directory\r\nwhen creating new functions (only when using node 4.3 runtime).\r\n\r\nFunctions can also be added manually using the mocha-create command\r\n\r\n```\r\nsls function mocha-create functionName\r\n```\r\n\r\n### Running tests\r\n\r\nTests can be run directly using Mocha (in which case it needs to be installed to your project or globally)\r\nor using the mocha-run command\r\n\r\n```\r\nsls function mocha-run [-s stage] [-r region] [function1] [function2] [...]\r\n```\r\n\r\nTo use a mocha reporter (e.g. json), use the -R switch. Reporter options can be passed with the -O switch.\r\n\r\nIf no function names are passed to mocha-run, all tests are run from the test/ directory\r\n\r\n## Release History\r\n\r\n* 2016/05/17 - v0.5.8 - Fix entangled function tests.\r\n                      - Move wrapper.init into 'it' scope in generated mocha test code.\r\n* 2016/05/17 - v0.5.7 - Fix non-posix path separator in Windows.\r\n                      - Replace with forward slash in path.relative.\r\n* 2016/05/10 - v0.5.5 - Fix error message for mocha-create.\r\n                      - Create tests with mocha-create without path in test name (as function create does)\r\n* 2016/05/09 - v0.5.3 - Set environment variables during mocha-run (by AniKo)\r\n                      - Add reporter options, return non-zero status for failures (by chouandy)\r\n* 2016/04/09 - v0.5.0 - Initial version of module for serverless 0.5.*\r\n\r\n## License\r\n\r\nCopyright (c) 2016 [SC5](http://sc5.io/), licensed for users and contributors under MIT license.\r\nhttps://github.com/SC5/serverless-mocha-plugin/blob/master/LICENSE\r\n\r\n\r\n[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/SC5/serverless-mocha-plugin/trend.png)](https://bitdeli.com/free \"Bitdeli Badge\")\r\n",
-  "readmeFilename": "README.md",
-  "gitHead": "527508d798c1132afb712319ef79c1e340741080",
-  "bugs": {
-    "url": "https://github.com/integratedresearch/serverless-mocha-plugin/issues"
-  },
-  "homepage": "https://github.com/integratedresearch/serverless-mocha-plugin#readme",
-  "_id": "serverless-mocha-plugin@0.5.8",
-  "_shasum": "6a53448c556c9fbbc0d788b389f52741703df59d",
-  "_from": "serverless-mocha-plugin@latest"
+    "lambda-wrapper": "^0.1.0",
+    "ejs": "^2.4.2"
+  }
 }
