@@ -167,7 +167,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
       return new BbPromise(function(resolve, reject) {
         let functions = _this.evt.options.paths;
-        let mocha = new Mocha();
+        let mocha = new Mocha({timeout: 5000});
         //This could pose as an issue if several functions share a common ENV name but different values.
 
         let stage = _this.evt.options.stage;
@@ -290,7 +290,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
           let templateFilenamePath = path.join(testFolder, templateFilename);
           fs.exists(templateFilenamePath, function (exists) {
             let templateString = exists ? getTemplateFromFile(templateFilenamePath) : getTemplateFromString();
-  
+
               let content = ejs.render(templateString, {
                 'functionName': funcName,
                 'functionPath': funcPath
@@ -382,12 +382,12 @@ const liveFunction = {
 
 describe('<%= functionName %>', () => {
   before(function (done) {
-//  wrapper.init(liveFunction); // Run the deployed lambda 
+//  wrapper.init(liveFunction); // Run the deployed lambda
     wrapper.init(mod);
 
     done()
   })
-  
+
   it('implement tests here', (done) => {
     wrapper.run({}, (err, response) => {
       done('no tests implemented');
