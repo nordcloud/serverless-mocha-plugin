@@ -58,7 +58,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         context:       'function',
         contextAction: 'mocha-create',
         options:       [{
-          options:      'template',
+          option:       'template',
           shortcut:     'T',
           description:  'name of a template file used when creating test'
         }],
@@ -133,7 +133,7 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
         });
       }
 
-      return createTest(evt.options.paths[0]);
+      return createTest(evt.options.paths[0], evt.options.template || templateFilename);
     }
 
     _runAction(evt) {
