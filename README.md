@@ -76,6 +76,7 @@ If you'd like to get more information on the template engine, you check document
 
 
 ## Release History
+* 2016/07/25 - v0.5.14 - Fix bug with mocha-create -T
 * 2016/06/28 - v0.5.13 - Increase default test timeout to 6000ms
 * 2016/06/27 - v0.5.12 - Add support for using template test files
 * 2016/06/22 - v0.5.11 - Add support for running tests from live environment
