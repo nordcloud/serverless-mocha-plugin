@@ -372,24 +372,26 @@ module.exports = function(S) { // Always pass in the ServerlessPlugin Class
 
 const mod         = require('../<%= functionPath %>/handler.js');
 const mochaPlugin = require('serverless-mocha-plugin');
-const wrapper     = mochaPlugin.lambdaWrapper;
+const lambdaWrapper     = mochaPlugin.lambdaWrapper;
 const expect      = mochaPlugin.chai.expect;
 
 const liveFunction = {
   region: process.env.SERVERLESS_REGION,
   lambdaFunction: process.env.SERVERLESS_PROJECT + '-<%= functionName %>'
 }
+var wrapped;
 
 describe('<%= functionName %>', () => {
   before(function (done) {
-//  wrapper.init(liveFunction); // Run the deployed lambda 
-    wrapper.init(mod);
+//  wrapped = lambdaWrapper.wrap(liveFunction); // Run the deployed lambda 
+    wrapped = lambdaWrapper.wrap(mod);
 
     done()
-  })
+  });
   
   it('implement tests here', (done) => {
-    wrapper.run({}, (err, response) => {
+    //runHandler(event, customContext, callback)
+    wrapped.runHandler({}, {}, (err, response) => {
       done('no tests implemented');
     });
   });
