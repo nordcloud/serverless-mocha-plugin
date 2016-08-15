@@ -20,8 +20,10 @@ This plugins does the following:
 In your project root, run:
 
 ```bash
-npm install --save serverless-mocha-plugin
+npm install --save serverless-mocha-plugin@0.5
 ```
+Remember to set the package version, otherwise it will install the 1.0 
+version of the package, which is not compatible with Serverless 0.5.
 
 Add the plugin to `s-project.json`:
 
