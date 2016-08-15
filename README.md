@@ -76,7 +76,7 @@ If you'd like to get more information on the template engine, you check document
 
 
 ## Release History
-* 2016/08/15 - v0.9.0 - Preliminary version for Serverless 1.0
+* 2016/08/15 - v1.0.0 - Preliminary version for Serverless 1.0
 * 2016/06/28 - v0.5.13 - Increase default test timeout to 6000ms
 * 2016/06/27 - v0.5.12 - Add support for using template test files
 * 2016/06/22 - v0.5.11 - Add support for running tests from live environment
