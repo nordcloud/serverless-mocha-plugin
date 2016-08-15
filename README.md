@@ -3,7 +3,9 @@
 A Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which
 adds support for test driven development using [mocha](https://mochajs.org/)
 
-**THIS PLUGIN REQUIRES SERVERLESS V0.5 OR HIGHER!**
+**THIS PLUGIN REQUIRES SERVERLESS V0.5!**
+
+Check out the 1.0 branch for the development version for Serverless 1.0
 
 ## Introduction
 
