@@ -16,9 +16,8 @@ This plugins does the following:
 In your service root, run:
 
 ```bash
-npm install github:SC5/serverless-mocha-plugin#1.0
+npm install --save-dev serverless-mocha-plugin@1.0
 ```
-An NPM package will be provided at a later stage
 
 Add the plugin to `serverless.yml`:
 
