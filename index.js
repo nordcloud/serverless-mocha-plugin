@@ -236,11 +236,13 @@ class mochaPlugin {
 
   // SetEnvVars
   setEnvVars(funcName, options) {
-    utils.setEnv(this.serverless.environment.vars);
-    if (options.stage) {
-      utils.setEnv(this.serverless.environment.stages[options.stage].vars);
-      if (options.region) {
-        utils.setEnv(this.serverless.environment.stages[options.stage].regions[options.region].vars);
+    if (this.serverless.environment) {
+      utils.setEnv(this.serverless.environment.vars);
+      if (options.stage) {
+        utils.setEnv(this.serverless.environment.stages[options.stage].vars);
+        if (options.region) {
+          utils.setEnv(this.serverless.environment.stages[options.stage].regions[options.region].vars);
+        }
       }
     }
   }
