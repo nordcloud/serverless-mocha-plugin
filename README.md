@@ -3,7 +3,9 @@
 A Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which
 adds support for test driven development using [mocha](https://mochajs.org/)
 
-**THIS PLUGIN REQUIRES SERVERLESS V0.5 OR HIGHER!**
+**THIS PLUGIN REQUIRES SERVERLESS V0.5!**
+
+Check out the 1.0 branch for the development version for Serverless 1.0
 
 ## Introduction
 
@@ -18,8 +20,10 @@ This plugins does the following:
 In your project root, run:
 
 ```bash
-npm install --save serverless-mocha-plugin
+npm install --save serverless-mocha-plugin@0.5
 ```
+Remember to set the package version, otherwise it will install the 1.0 
+version of the package, which is not compatible with Serverless 0.5.
 
 Add the plugin to `s-project.json`:
 
@@ -61,7 +65,25 @@ To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be 
 
 If no function names are passed to mocha-run, all tests are run from the test/ directory
 
+The default timeout for tests is 6 seconds. In case you need to apply a different timeout, that can be done in the test file 
+using using this.timeout(milliseconds) in the define, after, before or it -blocks.
+
+### Using own template for a test file
+
+If you'd like to use your own template for a generated test file, create a sls-mocha-plugin-template.ejs file
+in the test/ directory. Currently, there are two variables available for use:
+
+- functionName - name of the function
+- functionPath - path to the function
+
+If you'd like to get more information on the template engine, you check documentation of the [EJS project](http://ejs.co/).
+
+
 ## Release History
+* 2016/07/26 - v0.5.15 - Change to use lambda-wrapper runHandler by default (has ability to pass a default context)
+* 2016/07/25 - v0.5.14 - Fix bug with mocha-create -T
+* 2016/06/28 - v0.5.13 - Increase default test timeout to 6000ms
+* 2016/06/27 - v0.5.12 - Add support for using template test files
 * 2016/06/22 - v0.5.11 - Add support for running tests from live environment
 * 2016/06/21 - v0.5.9 - Prompt for region / stage when running tests. Set environment separately for each test
 * 2016/06/03 - v0.5.7 - Fix entangled function tests, Move wrapper.init into 'it' scope in generated mocha test code.
