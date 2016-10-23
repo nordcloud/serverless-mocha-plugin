@@ -1,6 +1,6 @@
 {
   "name": "serverless-mocha-plugin",
-  "version": "0.5.16",
+  "version": "1.0.3",
   "engines": {
     "node": ">=4.0"
   },
@@ -32,13 +32,13 @@
   "bin": {},
   "scripts": {},
   "devDependencies": {
-    "aws-sdk": "^2.4.0"
   },
   "dependencies": {
     "bluebird": "3.0.6",
     "chai": "3.2.0",
-    "mocha": "2.2.5",
+    "ejs": "^2.4.2",
     "lambda-wrapper": "^0.1.1",
-    "ejs": "^2.4.2"
+    "mocha": "2.2.5",
+    "aws-sdk": "^2.4.0"
   }
 }
