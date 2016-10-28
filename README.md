@@ -18,8 +18,6 @@ In your service root, run:
 ```bash
 npm install --save-dev serverless-mocha-plugin
 ```
-Remember to set the package version, otherwise it will install the 1.0 
-version of the package, which is not compatible with Serverless 0.5.
 
 Add the plugin to `serverless.yml`:
 

@@ -116,7 +116,6 @@ class mochaPlugin {
 
           mocha.addFile(funcs[func].mochaPlugin.testPath);
         })
-
         var reporter = _this.options.reporter;
         
         if ( reporter !== undefined) {
@@ -197,9 +196,8 @@ class mochaPlugin {
               _this.serverless.cli.log(`Creating file ${testFilePath} failed: ${err}`);
               return new Error(`Creating file ${testFilePath} failed: ${err}`);
             }
-
             return _this.serverless.cli.log(`serverless-mocha-plugin: created ${testFilePath}`);
-          });
+          })
         });
       });
     });
@@ -248,6 +246,7 @@ class mochaPlugin {
       }
     }
   }
+
 }
   
 module.exports = mochaPlugin;
