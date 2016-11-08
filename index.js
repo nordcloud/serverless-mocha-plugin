@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * serverless-mocha-plugin
  * - a plugin for TDD with serverless
@@ -218,7 +220,7 @@ class mochaPlugin {
       }
 
       let func;
-      funcNames.forEach((funcName) => {
+      funcList.forEach((funcName) => {
         func = allFuncs[funcName];
         if (func) {
           funcObjs[funcName] = func;
