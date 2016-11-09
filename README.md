@@ -90,6 +90,15 @@ in the test/ directory. Currently, there are three variables available for use:
 
 If you'd like to get more information on the template engine, you check documentation of the [EJS project](http://ejs.co/).
 
+### Using own template for function file
+
+The templates to use for new function Files can be determined with the custom `functionTemplate` configuration in `serverless.yml`
+
+```
+custom:
+  serverless-mocha-plugin:
+    functionTemplate: templates/myFunction.js
+```
 
 ## Release History (1.x)
 

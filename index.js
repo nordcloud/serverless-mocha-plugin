@@ -290,8 +290,16 @@ class mochaPlugin {
     const handlerDir = path.join(this.serverless.config.servicePath, handlerInfo.dir);
     const handlerFile = `${handlerInfo.name}.js`;
     const handlerFunction = handlerInfo.ext.replace(/^\./, '');
+    let templateFile = path.join(__dirname, functionTemplateFile)
 
-    const templateText = fse.readFileSync(path.join(__dirname, functionTemplateFile)).toString();
+    if (this.serverless.service.custom && 
+      this.serverless.service.custom['serverless-mocha-plugin'] && 
+      this.serverless.service.custom['serverless-mocha-plugin'].functionTemplate) {
+      templateFile = path.join(this.serverless.config.servicePath, 
+        this.serverless.service.custom['serverless-mocha-plugin'].functionTemplate);
+    };
+
+    const templateText = fse.readFileSync(templateFile).toString();
     const jsFile = ejs.render(templateText, {
       handlerFunction,
     });
@@ -336,7 +344,6 @@ class mochaPlugin {
 
       const ymlEditor = yamlEdit(serverlessYmlFileContent);
 
-
       if (ymlEditor.hasKey(`functions.${functionName}`)) {
         const errorMessage = [
           `Function "${functionName}" already exists. Cannot create function.`,
@@ -357,8 +364,6 @@ class mochaPlugin {
       }
 
       fse.writeFileSync(serverlessYmlFilePath, ymlEditor.dump());
-
-
 
       if (runtime === 'aws-nodejs4.3') {
         return this.createAWSNodeJSFuncFile(handler);
