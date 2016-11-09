@@ -11,10 +11,20 @@ const lambdaWrapper = require('lambda-wrapper');
 const Mocha = require('mocha');
 const chai = require('chai');
 const ejs = require('ejs');
+const fse = require('fs-extra');
 const utils = require('./utils');
 const BbPromise = require('bluebird');
+const yamlEdit = require('yaml-edit');
 
-const templateFilename = path.join('templates', 'test-template.ejs');
+const testTemplateFile = path.join('templates', 'test-template.ejs');
+const functionTemplateFile = path.join('templates', 'function-template.ejs');
+
+const validFunctionRuntimes = [
+  'aws-nodejs4.3',
+];
+
+const humanReadableFunctionRuntimes = `${validFunctionRuntimes
+  .map((template) => `"${template}"`).join(', ')}`;
 
 class mochaPlugin {
   constructor(serverless, options) {
@@ -34,6 +44,23 @@ class mochaPlugin {
               function: {
                 usage: 'Name of the function',
                 shortcut: 'f',
+                required: true,
+              },
+            },
+          },
+          function: {
+            usage: 'Create a function into the service',
+            lifecycleEvents: [
+              'create',
+            ],
+            options: {
+              function: {
+                usage: 'Name of the function',
+                shortcut: 'f',
+                required: true,
+              },
+              handler: {
+                usage: 'Handler for the function (e.g. --handler my-function/index.handler)',
                 required: true,
               },
             },
@@ -78,6 +105,11 @@ class mochaPlugin {
       'invoke:test:test': () => {
         BbPromise.bind(this)
         .then(this.runTests);
+      },
+      'create:function:create': () => {
+        BbPromise.bind(this)
+        .then(this.createFunction)
+        .then(this.createTest);
       },
     };
   }
@@ -176,10 +208,10 @@ class mochaPlugin {
           return (new Error(`File ${testFilePath} already exists`));
         }
 
-        let templateFilenamePath = path.join(testFolder, templateFilename);
+        let templateFilenamePath = path.join(testFolder, testTemplateFile);
         fs.exists(templateFilenamePath, (exists2) => {
           if (!exists2) {
-            templateFilenamePath = path.join(__dirname, templateFilename);
+            templateFilenamePath = path.join(__dirname, testTemplateFile);
           }
           const templateString = utils.getTemplateFromFile(templateFilenamePath);
 
@@ -247,7 +279,88 @@ class mochaPlugin {
       }
     }
   }
+  createAWSNodeJSFuncFile(handlerPath) {
+    const handlerInfo = path.parse(handlerPath);
+    const handlerDir = path.join(this.serverless.config.servicePath, handlerInfo.dir);
+    const handlerFile = `${handlerInfo.name}.js`;
+    const handlerFunction = handlerInfo.ext.replace(/^\./, '');
 
+    const templateText = fse.readFileSync(path.join(__dirname, functionTemplateFile)).toString();
+    const jsFile = ejs.render(templateText, {
+      handlerFunction,
+    });
+
+    const filePath = path.join(handlerDir, handlerFile);
+
+    this.serverless.utils.writeFileDir(filePath);
+    if (this.serverless.utils.fileExistsSync(filePath)) {
+      const errorMessage = [
+        `File "${filePath}" already exists. Cannot create function.`,
+      ].join('');
+      throw new this.serverless.classes.Error(errorMessage);
+    }
+    fse.writeFileSync(path.join(handlerDir, handlerFile), jsFile);
+
+    this.serverless.cli.log(`Created function file "${path.join(handlerDir, handlerFile)}"`);
+    return BbPromise.resolve();
+  }
+
+  createFunction() {
+    this.serverless.cli.log('Generating function…');
+    const functionName = this.options.function;
+    const handler = this.options.handler;
+
+    const serverlessYmlFilePath = path
+        .join(this.serverless.config.servicePath, 'serverless.yml');
+
+    const serverlessYmlFileContent = fse
+      .readFileSync(serverlessYmlFilePath).toString();
+
+    return this.serverless.yamlParser.parse(serverlessYmlFilePath)
+    .then((config) => {
+      const runtime = [config.provider.name, config.provider.runtime].join('-');
+
+      if (validFunctionRuntimes.indexOf(runtime) < 0) {
+        const errorMessage = [
+          `Provider / Runtime "${runtime}" is not supported.`,
+          ` Supported runtimes are: ${humanReadableFunctionRuntimes}.`,
+        ].join('');
+        throw new this.serverless.classes.Error(errorMessage);
+      }
+
+      const ymlEditor = yamlEdit(serverlessYmlFileContent);
+
+
+      if (ymlEditor.hasKey(`functions.${functionName}`)) {
+        const errorMessage = [
+          `Function "${functionName}" already exists. Cannot create function.`,
+        ].join('');
+        throw new this.serverless.classes.Error(errorMessage);
+      }
+
+      const funcDoc = {};
+      funcDoc[functionName] = this.serverless.service.functions[functionName] = {
+        handler,
+      };
+
+      if (ymlEditor.insertChild('functions', funcDoc)) {
+        const errorMessage = [
+          `Could not find functions in ${serverlessYmlFilePath}`,
+        ].join('');
+        throw new this.serverless.classes.Error(errorMessage);
+      }
+
+      fse.writeFileSync(serverlessYmlFilePath, ymlEditor.dump());
+
+
+
+      if (runtime === 'aws-nodejs4.3') {
+        return this.createAWSNodeJSFuncFile(handler);
+      }
+
+      return BbPromise.resolve();
+    });
+  }
 }
 
 module.exports = mochaPlugin;

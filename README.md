@@ -10,6 +10,7 @@ adds support for test driven development using [mocha](https://mochajs.org/)
 This plugins does the following:
 
 * It provides commands to create and run tests manually
+* It provides a command to create a function, which automatically also creates a test
 
 ## Installation
 
@@ -28,10 +29,25 @@ plugins:
 
 ## Usage
 
-### Creating tests
+### Creating functions
 
-When the plug-in is installed, tests are automatically created to the test/ directory
-when creating new functions (only when using node 4.3 runtime).
+Functions (and associated tests) can be created using the command
+
+```
+sls create function -f functionName --handler handler
+```
+ 
+e.g.
+
+```
+sls create function -f myFunction --handler functions/myFunction/index.handler
+```
+
+creates a new function `myFunction` into `serverless.yml` with a code template for
+the handler in `functions/myFunction/index.js` and a Javascript function `module.exports.handler` 
+as the entrypoint for the Lambda function. A test template is also created into `test/myFunction.js`.
+
+### Creating tests
 
 Functions can also be added manually using the mocha-create command
 
@@ -75,8 +91,9 @@ in the test/ directory. Currently, there are three variables available for use:
 If you'd like to get more information on the template engine, you check documentation of the [EJS project](http://ejs.co/).
 
 
-## Release History (1.0)
+## Release History (1.x)
 
+* 2016/11/09 - v1.1.0 - Added function create command.
 * 2016/09/23 - v1.0.2 - Bugfixes, configurable test timeouts
 * 2016/08/15 - v1.0.0 - Preliminary version for Serverless 1.0
 
