@@ -208,7 +208,15 @@ class mochaPlugin {
           return (new Error(`File ${testFilePath} already exists`));
         }
 
-        let templateFilenamePath = path.join(testFolder, testTemplateFile);
+        let templateFilenamePath = '';
+
+        if (this.serverless.service.custom && 
+          this.serverless.service.custom['serverless-mocha-plugin'] && 
+          this.serverless.service.custom['serverless-mocha-plugin'].testTemplate) {
+          templateFilenamePath = path.join(this.serverless.config.servicePath, 
+            this.serverless.service.custom['serverless-mocha-plugin'].testTemplate);
+        };
+
         fs.exists(templateFilenamePath, (exists2) => {
           if (!exists2) {
             templateFilenamePath = path.join(__dirname, testTemplateFile);

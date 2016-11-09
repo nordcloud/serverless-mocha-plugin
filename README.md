@@ -81,8 +81,15 @@ using using this.timeout(milliseconds) in the define, after, before or it -block
 
 ### Using own template for a test file
 
-If you'd like to use your own template for a generated test file, create a sls-mocha-plugin-template.ejs file
-in the test/ directory. Currently, there are three variables available for use:
+The templates to use for new function Files can be determined with the custom `testTemplate` configuration in `serverless.yml`
+
+```
+custom:
+  serverless-mocha-plugin:
+    testTemplate: templates/myTest.js
+```
+
+Currently, there are three variables available for use in the template:
 
 - functionName - name of the function
 - functionPath - path to the function
@@ -100,8 +107,11 @@ custom:
     functionTemplate: templates/myFunction.js
 ```
 
+
+
 ## Release History (1.x)
 
+* 2016/11/09 - v1.2.0 - Added ability to add function / test templates
 * 2016/11/09 - v1.1.0 - Added function create command.
 * 2016/09/23 - v1.0.2 - Bugfixes, configurable test timeouts
 * 2016/08/15 - v1.0.0 - Preliminary version for Serverless 1.0
