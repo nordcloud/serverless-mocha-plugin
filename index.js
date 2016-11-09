@@ -268,6 +268,10 @@ class mochaPlugin {
 
   // SetEnvVars
   setEnvVars(funcName, options) {
+    process.env['SERVERLESS_PROJECT'] = this.serverless.service.service;
+    process.env['SERVERLESS_REGION'] = options.region;
+    process.env['SERVERLESS_STAGE'] = options.stage;
+
     if (this.serverless.environment) {
       utils.setEnv(this.serverless.environment.vars);
       if (options.stage) {
@@ -278,6 +282,8 @@ class mochaPlugin {
         }
       }
     }
+    
+
   }
   createAWSNodeJSFuncFile(handlerPath) {
     const handlerInfo = path.parse(handlerPath);
