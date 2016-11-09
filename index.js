@@ -195,7 +195,7 @@ class mochaPlugin {
     const funcName = this.options.f || this.options.function;
     const myModule = this;
 
-    utils.createTestFolder().then((testFolder) => {
+    utils.createTestFolder().then(() => {
       const testFilePath = utils.getTestFilePath(funcName);
       const func = myModule.serverless.service.functions[funcName];
       const handlerParts = func.handler.split('.');
@@ -210,12 +210,12 @@ class mochaPlugin {
 
         let templateFilenamePath = '';
 
-        if (this.serverless.service.custom && 
-          this.serverless.service.custom['serverless-mocha-plugin'] && 
+        if (this.serverless.service.custom &&
+          this.serverless.service.custom['serverless-mocha-plugin'] &&
           this.serverless.service.custom['serverless-mocha-plugin'].testTemplate) {
-          templateFilenamePath = path.join(this.serverless.config.servicePath, 
+          templateFilenamePath = path.join(this.serverless.config.servicePath,
             this.serverless.service.custom['serverless-mocha-plugin'].testTemplate);
-        };
+        }
 
         fs.exists(templateFilenamePath, (exists2) => {
           if (!exists2) {
@@ -290,22 +290,21 @@ class mochaPlugin {
         }
       }
     }
-    
-
   }
+
   createAWSNodeJSFuncFile(handlerPath) {
     const handlerInfo = path.parse(handlerPath);
     const handlerDir = path.join(this.serverless.config.servicePath, handlerInfo.dir);
     const handlerFile = `${handlerInfo.name}.js`;
     const handlerFunction = handlerInfo.ext.replace(/^\./, '');
-    let templateFile = path.join(__dirname, functionTemplateFile)
+    let templateFile = path.join(__dirname, functionTemplateFile);
 
-    if (this.serverless.service.custom && 
-      this.serverless.service.custom['serverless-mocha-plugin'] && 
+    if (this.serverless.service.custom &&
+      this.serverless.service.custom['serverless-mocha-plugin'] &&
       this.serverless.service.custom['serverless-mocha-plugin'].functionTemplate) {
-      templateFile = path.join(this.serverless.config.servicePath, 
+      templateFile = path.join(this.serverless.config.servicePath,
         this.serverless.service.custom['serverless-mocha-plugin'].functionTemplate);
-    };
+    }
 
     const templateText = fse.readFileSync(templateFile).toString();
     const jsFile = ejs.render(templateText, {
