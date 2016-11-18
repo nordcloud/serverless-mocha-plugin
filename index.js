@@ -2,7 +2,7 @@
 
 /**
  * serverless-mocha-plugin
- * - a plugin for TDD with serverless
+ * - a plugin for TDD with Serverless Framework
  */
 
 const path = require('path');
@@ -24,7 +24,7 @@ const validFunctionRuntimes = [
 ];
 
 const humanReadableFunctionRuntimes = `${validFunctionRuntimes
-  .map((template) => `"${template}"`).join(', ')}`;
+  .map(template => `"${template}"`).join(', ')}`;
 
 class mochaPlugin {
   constructor(serverless, options) {
@@ -45,6 +45,10 @@ class mochaPlugin {
                 usage: 'Name of the function',
                 shortcut: 'f',
                 required: true,
+              },
+              path: {
+                usage: 'Path for tests',
+                shortcut: 'p',
               },
             },
           },
@@ -193,10 +197,11 @@ class mochaPlugin {
 
   createTest() {
     const funcName = this.options.f || this.options.function;
+    const testsRootFolder = this.options.p || this.options.path;
     const myModule = this;
 
     utils.createTestFolder().then(() => {
-      const testFilePath = utils.getTestFilePath(funcName);
+      const testFilePath = utils.getTestFilePath(funcName, testsRootFolder);
       const func = myModule.serverless.service.functions[funcName];
       const handlerParts = func.handler.split('.');
       const funcPath = (`${handlerParts[0]}.js`).replace(/\\/g, '/');
@@ -276,9 +281,9 @@ class mochaPlugin {
 
   // SetEnvVars
   setEnvVars(funcName, options) {
-    process.env['SERVERLESS_PROJECT'] = this.serverless.service.service;
-    process.env['SERVERLESS_REGION'] = options.region;
-    process.env['SERVERLESS_STAGE'] = options.stage;
+    process.env.SERVERLESS_PROJECT = this.serverless.service.service;
+    process.env.SERVERLESS_REGION = options.region;
+    process.env.SERVERLESS_STAGE = options.stage;
 
     if (this.serverless.environment) {
       utils.setEnv(this.serverless.environment.vars);
@@ -327,7 +332,7 @@ class mochaPlugin {
   }
 
   createFunction() {
-    this.serverless.cli.log('Generating function…');
+    this.serverless.cli.log('Generating function...');
     const functionName = this.options.function;
     const handler = this.options.handler;
 
