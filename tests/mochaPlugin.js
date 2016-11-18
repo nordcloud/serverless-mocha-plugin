@@ -2,11 +2,13 @@
 
 const expect = require('chai').expect;
 const path = require('path');
+const fse = require('fs-extra');
 const MochaPlugin = require('../index');
 
 describe('mochaPlugin', () => {
   before(() => {
     const tmp = path.join(__dirname, '../', 'tmp');
+    fse.mkdirsSync(tmp);
     process.chdir(tmp);
   });
 
