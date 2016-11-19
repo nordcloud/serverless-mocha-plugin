@@ -46,10 +46,6 @@ class mochaPlugin {
                 shortcut: 'f',
                 required: true,
               },
-              path: {
-                usage: 'Path for tests',
-                shortcut: 'p',
-              },
             },
           },
           function: {
