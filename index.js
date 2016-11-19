@@ -205,7 +205,7 @@ class mochaPlugin {
       const func = myModule.serverless.service.functions[funcName];
       const handlerParts = func.handler.split('.');
       const funcPath = (`${handlerParts[0]}.js`).replace(/\\/g, '/');
-      const funcCall = handlerParts[1];
+      const handler = handlerParts[handlerParts.length - 1];
 
       fs.exists(testFilePath, (exists) => {
         if (exists) {
@@ -231,7 +231,7 @@ class mochaPlugin {
           const content = ejs.render(templateString, {
             functionName: funcName,
             functionPath: funcPath,
-            handlerName: funcCall,
+            handlerName: handler,
           });
 
           fs.writeFile(testFilePath, content, (err) => {
