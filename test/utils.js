@@ -14,12 +14,12 @@ describe('utils', () => {
 
   it('tests getTestFilePath for handler', () => {
     const testFilePath = utils.getTestFilePath('handler');
-    expect(testFilePath).to.be.equal('tests/handler.js');
+    expect(testFilePath).to.be.equal('test/handler.js');
   });
 
   it('tests getTestFilePath for folder/handler', () => {
     const testFilePath = utils.getTestFilePath('folder/handler');
-    expect(testFilePath).to.be.equal('tests/handler.js');
+    expect(testFilePath).to.be.equal('test/handler.js');
   });
 
   it('tests getTestFilePath for handler in custom folder', () => {
@@ -40,13 +40,13 @@ describe('utils', () => {
 
   it('tests default createTestFolder', () =>
     utils.createTestFolder().then((folder) => {
-      expect(folder).to.be.equal('tests');
+      expect(folder).to.be.equal('test');
     })
   );
 
   it('tests default createTestFolder (exists)', () =>
     utils.createTestFolder().then((folder) => {
-      expect(folder).to.be.equal('tests');
+      expect(folder).to.be.equal('test');
     })
   );
 

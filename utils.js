@@ -4,7 +4,7 @@ const BbPromise = require('bluebird');
 const path = require('path');
 const fs = require('fs');
 
-const defaultTestsRootFolder = 'tests'; // default test folder used for tests
+const defaultTestsRootFolder = 'test'; // default test folder used for tests
 
 function getTestsFolder(testsRootFolder) {
   return testsRootFolder || defaultTestsRootFolder;

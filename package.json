@@ -32,7 +32,7 @@
   "main": "index.js",
   "bin": {},
   "scripts": {
-    "test": "mocha tests",
+    "test": "mocha",
     "lint": "eslint ."
   },
   "devDependencies": {
