@@ -74,6 +74,7 @@ function setEnv(params) {
 }
 
 module.exports = {
+  getTestsFolder,
   getTestFilePath,
   getTestFiles,
   createTestFolder,
