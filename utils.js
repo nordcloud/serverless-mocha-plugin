@@ -4,10 +4,14 @@ const BbPromise = require('bluebird');
 const path = require('path');
 const fs = require('fs');
 
-const testFolder = 'test'; // Folder used my mocha for tests
+const defaultTestsRootFolder = 'test'; // default test folder used for tests
 
-function getTestFilePath(funcName) {
-  return path.join(testFolder, `${funcName.replace(/.*\//g, '')}.js`);
+function getTestsFolder(testsRootFolder) {
+  return testsRootFolder || defaultTestsRootFolder;
+}
+
+function getTestFilePath(funcName, testsRootFolder) {
+  return path.join(getTestsFolder(testsRootFolder), `${funcName.replace(/.*\//g, '')}.js`);
 }
 
 // getTestFiles. If no functions provided, returns all files
@@ -15,7 +19,7 @@ function getTestFiles(funcs) {
   return new BbPromise((resolve) => {
     const funcNames = Object.keys(funcs);
     const resFuncs = funcs;
-    if (funcNames && (funcNames.length > 0)) {
+    if (funcNames && funcNames.length > 0) {
       funcNames.forEach((val) => {
         resFuncs[val].mochaPlugin = {
           testPath: getTestFilePath(val),
@@ -28,17 +32,18 @@ function getTestFiles(funcs) {
 }
 
 // Create the test folder
-function createTestFolder() {
+function createTestFolder(testsRootFolder) {
   return new BbPromise((resolve, reject) => {
-    fs.exists(testFolder, (exists) => {
+    const testsFolder = getTestsFolder(testsRootFolder);
+    fs.exists(testsFolder, (exists) => {
       if (exists) {
-        return resolve(testFolder);
+        return resolve(testsFolder);
       }
-      fs.mkdir(testFolder, (err) => {
+      fs.mkdir(testsFolder, (err) => {
         if (err) {
           return reject(err);
         }
-        return resolve(testFolder);
+        return resolve(testsFolder);
       });
       return null;
     });
@@ -69,6 +74,7 @@ function setEnv(params) {
 }
 
 module.exports = {
+  getTestsFolder,
   getTestFilePath,
   getTestFiles,
   createTestFolder,

@@ -45,7 +45,11 @@ sls create function -f myFunction --handler functions/myFunction/index.handler
 
 creates a new function `myFunction` into `serverless.yml` with a code template for
 the handler in `functions/myFunction/index.js` and a Javascript function `module.exports.handler` 
-as the entrypoint for the Lambda function. A test template is also created into `test/myFunction.js`.
+as the entrypoint for the Lambda function. A test template is also created into `test/myFunction.js`. Optionally tests can be created to specific folder using `--path` or `-p` switch, e.g. 
+
+```
+sls create function -f myFunction --handler functions/myFunction/index.handler --path tests
+```
 
 ### Creating tests
 
@@ -78,6 +82,8 @@ If no function names are passed to "invoke test", all tests are run from the tes
 
 The default timeout for tests is 6 seconds. In case you need to apply a different timeout, that can be done in the test file 
 using using this.timeout(milliseconds) in the define, after, before or it -blocks.
+
+To run test in specific folder use `--path` or `-p` switch.
 
 ### Using own template for a test file
 

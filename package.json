@@ -8,7 +8,8 @@
   "author": "Mikael Puittinen (https://sc5.io)",
   "contributors": [
     "Anssi Herranen (https://sc5.io)",
-    "Rafał Janicki"
+    "Rafał Janicki",
+    "Eetu Tuomala (https://sc5.io)"
   ],
   "license": "MIT",
   "repository": {
@@ -30,7 +31,10 @@
   ],
   "main": "index.js",
   "bin": {},
-  "scripts": {},
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint ."
+  },
   "devDependencies": {
     "chai": "^3.2.0",
     "eslint": "^3.3.1",
@@ -39,18 +43,18 @@
     "eslint-plugin-import": "^1.13.0",
     "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.1.1",
-
     "mocha": "^2.2.5",
+    "proxyquire": "^1.7.10",
     "serverless": "^1.1.0",
     "sinon": "^1.17.6"
   },
   "dependencies": {
-    "aws-sdk": "^2.4.0",
-    "bluebird": "3.0.6",
-    "chai": "3.2.0",
-    "ejs": "^2.4.2",
-    "lambda-wrapper": "^0.1.1",
-    "mocha": "2.2.5",
+    "aws-sdk": "^2.6.3",
+    "bluebird": "3.4.6",
+    "chai": "^3.5.0",
+    "ejs": "^2.5.2",
+    "lambda-wrapper": "^0.1.2",
+    "mocha": "^3.1.2",
     "fs-extra": "^1.0.0",
     "yaml-edit": "^0.1.3"
   }
