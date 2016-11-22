@@ -68,9 +68,9 @@ describe('utils', () => {
         },
         functions: {
           testFunction1: {
-          }
-        }
-      }
+          },
+        },
+      },
     };
     utils.setEnv(serverless, 'testFunction1');
     expect(process.env.TEST_VALUE_PROVIDER).to.be.equal(undefined);
@@ -82,17 +82,17 @@ describe('utils', () => {
       service: {
         provider: {
           environment: {
-            TEST_VALUE_PROVIDER: 'test value provider'
-          }
+            TEST_VALUE_PROVIDER: 'test value provider',
+          },
         },
         functions: {
           testFunction1: {
             environment: {
-              TEST_VALUE_FUNCTION: 'test value function 1'
-            }
-          }
-        }
-      }
+              TEST_VALUE_FUNCTION: 'test value function 1',
+            },
+          },
+        },
+      },
     };
     utils.setEnv(serverless, 'testFunction1');
     expect(process.env.TEST_VALUE_PROVIDER).to.be.equal('test value provider');
@@ -104,17 +104,17 @@ describe('utils', () => {
       service: {
         provider: {
           environment: {
-            TEST_VALUE_PROVIDER: 'test value provider'
-          }
+            TEST_VALUE_PROVIDER: 'test value provider',
+          },
         },
         functions: {
           testFunction2: {
             environment: {
-              TEST_VALUE_FUNCTION: 'test value function 2'
-            }
-          }
-        }
-      }
+              TEST_VALUE_FUNCTION: 'test value function 2',
+            },
+          },
+        },
+      },
     };
     utils.setEnv(serverless, 'testFunction2');
     expect(process.env.TEST_VALUE_PROVIDER).to.be.equal('test value provider');
