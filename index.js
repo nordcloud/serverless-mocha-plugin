@@ -183,12 +183,11 @@ class mochaPlugin {
                 process.exit(failures);  // exit with non-zero status if there were failures
               });
             })
-              .on('suite', (suite) => {
+              .on('test', (suite) => {
                 const testFuncName = utils.funcNameFromPath(suite.file);
                 const func = testFileMap[testFuncName];
-
                 if (func) {
-                  myModule.setEnvVars(func, {
+                  myModule.setEnvVars(testFuncName, {
                     stage,
                     region,
                   });
@@ -290,16 +289,18 @@ class mochaPlugin {
     process.env.SERVERLESS_REGION = options.region;
     process.env.SERVERLESS_STAGE = options.stage;
 
-    if (this.serverless.environment) {
-      utils.setEnv(this.serverless.environment.vars);
-      if (options.stage) {
-        utils.setEnv(this.serverless.environment.stages[options.stage].vars);
-        if (options.region) {
-          utils.setEnv(this.serverless.environment.stages[options.stage]
-            .regions[options.region].vars);
-        }
-      }
-    }
+    utils.setEnv(this.serverless, funcName);
+
+    // if (this.serverless.environment) {
+    //   utils.setEnv(this.serverless.environment.vars);
+    //   if (options.stage) {
+    //     utils.setEnv(this.serverless.environment.stages[options.stage].vars);
+    //     if (options.region) {
+    //       utils.setEnv(this.serverless.environment.stages[options.stage]
+    //         .regions[options.region].vars);
+    //     }
+    //   }
+    // }
   }
 
   createAWSNodeJSFuncFile(handlerPath) {
