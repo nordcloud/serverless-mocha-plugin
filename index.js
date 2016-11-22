@@ -290,17 +290,6 @@ class mochaPlugin {
     process.env.SERVERLESS_STAGE = options.stage;
 
     utils.setEnv(this.serverless, funcName);
-
-    // if (this.serverless.environment) {
-    //   utils.setEnv(this.serverless.environment.vars);
-    //   if (options.stage) {
-    //     utils.setEnv(this.serverless.environment.stages[options.stage].vars);
-    //     if (options.region) {
-    //       utils.setEnv(this.serverless.environment.stages[options.stage]
-    //         .regions[options.region].vars);
-    //     }
-    //   }
-    // }
   }
 
   createAWSNodeJSFuncFile(handlerPath) {
