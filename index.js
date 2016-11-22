@@ -147,10 +147,7 @@ class mochaPlugin {
               return myModule.serverless.cli.log('No tests to run');
             }
             funcNames.forEach((func) => {
-              myModule.setEnvVars(func, {
-                stage,
-                region,
-              });
+              utils.setEnv(this.serverless, funcName);
 
               const testPath = path.join(testsPath, `${func}.js`);
               if (fse.existsSync(testPath)) {
@@ -187,10 +184,7 @@ class mochaPlugin {
                 const testFuncName = utils.funcNameFromPath(suite.file);
                 const func = testFileMap[testFuncName];
                 if (func) {
-                  myModule.setEnvVars(testFuncName, {
-                    stage,
-                    region,
-                  });
+                  utils.setEnv(myModule.serverless, funcName);
                 }
               });
             return null;
@@ -237,7 +231,6 @@ class mochaPlugin {
             handlerName: handler,
           });
 
-
           fse.writeFile(testFilePath, content, (err) => {
             if (err) {
               myModule.serverless.cli.log(`Creating file ${testFilePath} failed: ${err}`);
@@ -281,15 +274,6 @@ class mochaPlugin {
 
       return null;
     });
-  }
-
-  // SetEnvVars
-  setEnvVars(funcName, options) {
-    process.env.SERVERLESS_PROJECT = this.serverless.service.service;
-    process.env.SERVERLESS_REGION = options.region;
-    process.env.SERVERLESS_STAGE = options.stage;
-
-    utils.setEnv(this.serverless, funcName);
   }
 
   createAWSNodeJSFuncFile(handlerPath) {
