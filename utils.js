@@ -60,17 +60,17 @@ function funcNameFromPath(filePath) {
   return data.name;
 }
 
-function setEnv(params) {
-  const myParams = params;
-  if (myParams) {
-    // Do the magic here
-  }
-  return null;
-  // Serverless does not seem to have any logic with regards to variables yet.
-  // let vars = Object.keys(params);
-  // vars.forEach((val, idx) => {
-  //   process.env[val] = params[val];
-  // });
+function setEnv(serverless, funcName) {
+  const serviceVars = serverless.service.provider.environment || {};
+  const functionVars =
+    serverless.service.functions[funcName] ?
+      serverless.service.functions[funcName].environment :
+      {};
+  return Object.assign(
+    process.env,
+    serviceVars,
+    functionVars
+  );
 }
 
 module.exports = {

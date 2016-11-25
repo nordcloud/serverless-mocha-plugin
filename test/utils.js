@@ -61,8 +61,63 @@ describe('utils', () => {
     expect(functionName).to.be.equal('functionName');
   });
 
-  it('tests setEnv', () => {
-    const env = utils.setEnv([{ param: 'param' }]);
-    expect(env).to.be.equal(null);
+  it('tests setEnv with testFunction1 (env vars)', () => {
+    const serverless = {
+      service: {
+        provider: {
+        },
+        functions: {
+          testFunction1: {
+          },
+        },
+      },
+    };
+    utils.setEnv(serverless, 'testFunction1');
+    expect(process.env.TEST_VALUE_PROVIDER).to.be.equal(undefined);
+    expect(process.env.TEST_VALUE_FUNCTION).to.be.equal(undefined);
+  });
+
+  it('tests setEnv with testFunction1', () => {
+    const serverless = {
+      service: {
+        provider: {
+          environment: {
+            TEST_VALUE_PROVIDER: 'test value provider',
+          },
+        },
+        functions: {
+          testFunction1: {
+            environment: {
+              TEST_VALUE_FUNCTION: 'test value function 1',
+            },
+          },
+        },
+      },
+    };
+    utils.setEnv(serverless, 'testFunction1');
+    expect(process.env.TEST_VALUE_PROVIDER).to.be.equal('test value provider');
+    expect(process.env.TEST_VALUE_FUNCTION).to.be.equal('test value function 1');
+  });
+
+  it('tests setEnv with testFunction2', () => {
+    const serverless = {
+      service: {
+        provider: {
+          environment: {
+            TEST_VALUE_PROVIDER: 'test value provider',
+          },
+        },
+        functions: {
+          testFunction2: {
+            environment: {
+              TEST_VALUE_FUNCTION: 'test value function 2',
+            },
+          },
+        },
+      },
+    };
+    utils.setEnv(serverless, 'testFunction2');
+    expect(process.env.TEST_VALUE_PROVIDER).to.be.equal('test value provider');
+    expect(process.env.TEST_VALUE_FUNCTION).to.be.equal('test value function 2');
   });
 });
