@@ -119,7 +119,7 @@ custom:
 
 ## Release History (1.x)
 
-* 2016/11/28 - v1.3.0 - Added support for environment variables in Serverless 1.2
+* 2016/11/28 - v1.3.1 - Added support for environment variables in Serverless 1.2
 * 2016/11/09 - v1.2.0 - Added ability to add function / test templates
 * 2016/11/09 - v1.1.0 - Added function create command.
 * 2016/09/23 - v1.0.2 - Bugfixes, configurable test timeouts

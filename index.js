@@ -147,7 +147,7 @@ class mochaPlugin {
               return myModule.serverless.cli.log('No tests to run');
             }
             funcNames.forEach((func) => {
-              utils.setEnv(this.serverless, funcName);
+              utils.setEnv(this.serverless, func);
 
               const testPath = path.join(testsPath, `${func}.js`);
               if (fse.existsSync(testPath)) {
