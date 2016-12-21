@@ -138,7 +138,8 @@ class mochaPlugin {
     })
       .then((inited) => {
         myModule.serverless.environment = inited.environment;
-
+        const vars = new myModule.serverless.classes.Variables(myModule.serverless);
+        vars.populateService();
         myModule.getFunctions(funcName)
           .then(utils.getTestFiles)
           .then((funcs) => {
@@ -148,7 +149,6 @@ class mochaPlugin {
             }
             funcNames.forEach((func) => {
               utils.setEnv(this.serverless, func);
-
               const testPath = path.join(testsPath, `${func}.js`);
               if (fse.existsSync(testPath)) {
                 testFileMap[func] = funcs[func];
