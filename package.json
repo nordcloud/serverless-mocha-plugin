@@ -32,7 +32,7 @@
   "main": "index.js",
   "bin": {},
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -t 10000",
     "lint": "eslint ."
   },
   "devDependencies": {
@@ -45,7 +45,7 @@
     "eslint-plugin-react": "^6.1.1",
     "mocha": "^2.2.5",
     "proxyquire": "^1.7.10",
-    "serverless": "^1.1.0",
+    "serverless": "^1.4.0",
     "sinon": "^1.17.6"
   },
   "dependencies": {
