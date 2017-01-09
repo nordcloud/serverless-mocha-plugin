@@ -53,7 +53,7 @@ describe('integration', () => {
     );
   });
 
-  it('shoud run tests successfully', () => {
+  it('should run tests successfully', () => {
     // change test files to use local proxy version of mocha plugin
     testUtils.replaceTextInFile(
       path.join('test', 'hello.js'),
