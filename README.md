@@ -7,6 +7,8 @@ adds support for test driven development using [mocha](https://mochajs.org/)
 
 **THIS PLUGIN REQUIRES SERVERLESS V1.0 BETA OR NEWER!**
 
+More familiar with Jest? Use [serverless-jest-plugin](https://github.com/sc5/serverless-jest-plugin).
+
 ## Introduction
 
 This plugins does the following:
@@ -26,7 +28,7 @@ Add the plugin to `serverless.yml`:
 
 ```yml
 plugins:
-    - serverless-mocha-plugin
+  - serverless-mocha-plugin
 ```
 
 ## Usage
@@ -128,8 +130,5 @@ custom:
 
 ## License
 
-Copyright (c) 2016 [SC5](http://sc5.io/), licensed for users and contributors under MIT license.
+Copyright (c) 2017 [SC5](http://sc5.io/), licensed for users and contributors under MIT license.
 https://github.com/SC5/serverless-mocha-plugin/blob/master/LICENSE
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/SC5/serverless-mocha-plugin/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

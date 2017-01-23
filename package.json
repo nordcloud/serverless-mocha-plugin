@@ -32,21 +32,17 @@
   "main": "index.js",
   "bin": {},
   "scripts": {
-    "test": "mocha",
+    "test": "mocha -t 10000",
     "lint": "eslint ."
   },
   "devDependencies": {
-    "chai": "^3.2.0",
     "eslint": "^3.3.1",
     "eslint-config-airbnb": "^10.0.1",
     "eslint-config-airbnb-base": "^5.0.2",
     "eslint-plugin-import": "^1.13.0",
     "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.1.1",
-    "mocha": "^2.2.5",
-    "proxyquire": "^1.7.10",
-    "serverless": "^1.1.0",
-    "sinon": "^1.17.6"
+    "serverless": "^1.4.0"
   },
   "dependencies": {
     "aws-sdk": "^2.6.3",

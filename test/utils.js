@@ -4,10 +4,12 @@ const expect = require('chai').expect;
 const path = require('path');
 const fse = require('fs-extra');
 const utils = require('../utils.js');
+const testUtils = require('./testUtils');
 
 describe('utils', () => {
   before(() => {
-    const tmp = path.join(__dirname, '../', 'tmp');
+    process.env.MOCHA_PLUGIN_TEST_DIR = path.join(__dirname);
+    const tmp = testUtils.getTmpDirPath();
     fse.mkdirsSync(tmp);
     process.chdir(tmp);
   });
@@ -33,8 +35,10 @@ describe('utils', () => {
   });
 
   it('gets template from a file', () => {
-    const expectedTemplate = fse.readFileSync('../templates/test-template.ejs', 'utf-8');
-    const template = utils.getTemplateFromFile('../templates/test-template.ejs');
+    const templatePath =
+      path.join(process.env.MOCHA_PLUGIN_TEST_DIR, '../', 'templates/test-template.ejs');
+    const expectedTemplate = fse.readFileSync(templatePath, 'utf-8');
+    const template = utils.getTemplateFromFile(templatePath);
     expect(template).to.be.equal(expectedTemplate);
   });
 
