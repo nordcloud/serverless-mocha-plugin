@@ -45,7 +45,8 @@ describe('integration', () => {
 
   it('should create function goodbye', () => {
     const test = execSync(
-      `${serverlessExec} create function --function goodbye --handler goodbye/index.handler --stage dev`
+      `${serverlessExec}` +
+      ' create function --function goodbye --handler goodbye/index.handler --stage dev'
     );
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
