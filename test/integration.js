@@ -36,7 +36,7 @@ describe('integration', () => {
   });
 
   it('should create test for hello function', () => {
-    const test = execSync(`${serverlessExec} create test --function hello`);
+    const test = execSync(`${serverlessExec} create test --function hello --stage dev`);
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
       'serverless-mocha-plugin: created test/hello.js'
@@ -45,7 +45,7 @@ describe('integration', () => {
 
   it('should create function goodbye', () => {
     const test = execSync(
-      `${serverlessExec} create function --function goodbye --handler goodbye/index.handler`
+      `${serverlessExec} create function --function goodbye --handler goodbye/index.handler --stage dev`
     );
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
