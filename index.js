@@ -139,7 +139,7 @@ class mochaPlugin {
       .then((inited) => {
         myModule.serverless.environment = inited.environment;
         const vars = new myModule.serverless.classes.Variables(myModule.serverless);
-        vars.populateService();
+        vars.populateService(this.options);
         myModule.getFunctions(funcName)
           .then(utils.getTestFiles)
           .then((funcs) => {

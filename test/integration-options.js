@@ -11,13 +11,13 @@ const serverless = new Serverless();
 serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
-describe('integration', () => {
+describe('integration with stage option', () => {
   before(() => {
     // create temporary directory and copy test service there
     process.env.MOCHA_PLUGIN_TEST_DIR = path.join(__dirname);
     const tmpDir = testUtils.getTmpDirPath();
     fse.mkdirsSync(tmpDir);
-    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service'), tmpDir);
+    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-options'), tmpDir);
     process.chdir(tmpDir);
   });
 
@@ -36,7 +36,7 @@ describe('integration', () => {
   });
 
   it('should create test for hello function', () => {
-    const test = execSync(`${serverlessExec} create test --function hello`);
+    const test = execSync(`${serverlessExec} create test --function hello --stage prod`);
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
       'serverless-mocha-plugin: created test/hello.js'
@@ -46,7 +46,7 @@ describe('integration', () => {
   it('should create function goodbye', () => {
     const test = execSync(
       `${serverlessExec}` +
-      ' create function --function goodbye --handler goodbye/index.handler'
+      ' create function --function goodbye --handler goodbye/index.handler --stage prod'
     );
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
@@ -66,7 +66,7 @@ describe('integration', () => {
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
-    const test = execSync(`${serverlessExec} invoke test`);
+    const test = execSync(`${serverlessExec} invoke test --stage prod`);
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
