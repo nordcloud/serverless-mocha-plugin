@@ -70,6 +70,10 @@ class mochaPlugin {
                 usage: 'Path for the tests (e.g. --path tests)',
                 shortcut: 'p',
               },
+              endPoint: {
+                usage: 'Add an http endpoint (e.g. --endPoint relative-path)',
+                shortcut: 'e'
+              }
             },
           },
         },
@@ -363,9 +367,16 @@ class mochaPlugin {
         }
 
         const funcDoc = {};
-        funcDoc[functionName] = this.serverless.service.functions[functionName] = {
-          handler,
-        };
+        const funcData = {handler};
+        if (config.endPoint) {
+          funcData.events = [{
+            http: {
+              method: 'post',
+              path: config.endPoint
+            }
+          }];
+        }
+        funcDoc[functionName] = this.serverless.service.functions[functionName] = funcData;
 
         if (ymlEditor.insertChild('functions', funcDoc)) {
           const errorMessage = [
