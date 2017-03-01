@@ -368,11 +368,11 @@ class mochaPlugin {
 
         const funcDoc = {};
         const funcData = {handler};
-        if (config.endPoint) {
+        if (this.options.endPoint) {
           funcData.events = [{
             http: {
               method: 'post',
-              path: config.endPoint
+              path: this.options.endPoint
             }
           }];
         }
