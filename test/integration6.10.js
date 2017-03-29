@@ -11,13 +11,13 @@ const serverless = new Serverless();
 serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
-describe('integration', () => {
+describe('integration (node v6.10 template)', () => {
   before(() => {
     // create temporary directory and copy test service there
     process.env.MOCHA_PLUGIN_TEST_DIR = path.join(__dirname);
     const tmpDir = testUtils.getTmpDirPath();
     fse.mkdirsSync(tmpDir);
-    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service'), tmpDir);
+    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node6.10'), tmpDir);
     process.chdir(tmpDir);
   });
 
