@@ -99,7 +99,7 @@ class mochaPlugin {
                 usage: 'Path for the tests for running tests in other than default "test" folder',
               },
               compilers: {
-                usege: 'Compiler to use on Mocha',
+                usage: 'Compiler to use on Mocha',
               }
             },
           },
