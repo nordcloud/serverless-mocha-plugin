@@ -98,6 +98,9 @@ class mochaPlugin {
               path: {
                 usage: 'Path for the tests for running tests in other than default "test" folder',
               },
+              compilers: {
+                usege: 'Compiler to use on Mocha',
+              }
             },
           },
         },
@@ -174,6 +177,22 @@ class mochaPlugin {
                 });
               }
               mocha.reporter(reporter, reporterOptions);
+            }
+
+            const compilers = myModule.options['compilers'];
+            if (compilers !== undefined) {
+              const extensions = ['js'];
+              myModule.options['compilers'].split(' ').filter(function(e){return e!==''}).forEach(function (c) {
+                const idx = c.indexOf(':');
+                const ext = c.slice(0, idx);
+                const mod = c.slice(idx + 1);
+
+                if (mod[0] === '.') {
+                  mod = join(process.cwd(), mod);
+                }
+                require(mod);
+                extensions.push(ext);
+              });
             }
 
             mocha.run((failures) => {
