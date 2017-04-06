@@ -180,7 +180,7 @@ class mochaPlugin {
             }
 
             const compilers = myModule.options['compilers'];
-            if (compilers !== undefined) {
+            if (typeof compilers !== 'undefined') {
               const extensions = ['js'];
               myModule.options['compilers'].split(' ').filter(function(e){return e!==''}).forEach(function (c) {
                 const idx = c.indexOf(':');
