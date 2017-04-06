@@ -183,9 +183,9 @@ class mochaPlugin {
             if (typeof compilers !== 'undefined') {
               const extensions = ['js'];
               myModule.options['compilers'].split(' ').filter(function(e){return e!==''}).forEach(function (c) {
-                const idx = c.indexOf(':');
-                const ext = c.slice(0, idx);
-                const mod = c.slice(idx + 1);
+                const split = c.split(/:(.+)/);
+                const ext = split[0];
+                let mod = split[1];
 
                 if (mod[0] === '.') {
                   mod = join(process.cwd(), mod);
