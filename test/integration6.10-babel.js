@@ -12,7 +12,7 @@ serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
 describe('integration (node v6.10 template with babel)', () => {
-  before(function() {
+  before(function () {
     // increase timeout because of the npm install, with node 4 and npm 2 it's taking some time
     this.timeout(120000);
     // create temporary directory and copy test service there
