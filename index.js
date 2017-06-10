@@ -20,6 +20,7 @@ const functionTemplateFile = path.join('templates', 'function-template.ejs');
 
 const validFunctionRuntimes = [
   'aws-nodejs4.3',
+  'aws-nodejs6.10',
 ];
 
 const humanReadableFunctionRuntimes = `${validFunctionRuntimes
@@ -97,6 +98,9 @@ class mochaPlugin {
               path: {
                 usage: 'Path for the tests for running tests in other than default "test" folder',
               },
+              compilers: {
+                usage: 'Compiler to use on Mocha',
+              },
             },
           },
         },
@@ -173,6 +177,22 @@ class mochaPlugin {
                 });
               }
               mocha.reporter(reporter, reporterOptions);
+            }
+
+            const compilers = myModule.options.compilers;
+            if (typeof compilers !== 'undefined') {
+              const extensions = ['js'];
+              myModule.options.compilers.split(',').filter(e => e !== '').forEach(c => {
+                const split = c.split(/:(.+)/);
+                const ext = split[0];
+                let mod = split[1];
+
+                if (mod[0] === '.') {
+                  mod = path.join(process.cwd(), mod);
+                }
+                require(mod); // eslint-disable-line global-require
+                extensions.push(ext);
+              });
             }
 
             mocha.run((failures) => {
@@ -356,7 +376,7 @@ class mochaPlugin {
 
         fse.writeFileSync(serverlessYmlFilePath, ymlEditor.dump());
 
-        if (runtime === 'aws-nodejs4.3') {
+        if (runtime === 'aws-nodejs4.3' || runtime === 'aws-nodejs6.10') {
           return this.createAWSNodeJSFuncFile(handler);
         }
 

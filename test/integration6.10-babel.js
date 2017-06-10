@@ -11,14 +11,19 @@ const serverless = new Serverless();
 serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
-describe('integration', () => {
-  before(() => {
+describe('integration (node v6.10 template with babel)', () => {
+  before(function () {
+    // increase timeout because of the npm install, with node 4 and npm 2 it's taking some time
+    this.timeout(120000);
     // create temporary directory and copy test service there
     process.env.MOCHA_PLUGIN_TEST_DIR = path.join(__dirname);
     const tmpDir = testUtils.getTmpDirPath();
     fse.mkdirsSync(tmpDir);
-    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service'), tmpDir);
+    fse.copySync(
+      path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node6.10-babel'),
+      tmpDir);
     process.chdir(tmpDir);
+    execSync('npm install');
   });
 
   it('should contain test params in cli info', () => {
@@ -66,11 +71,8 @@ describe('integration', () => {
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
-
-    const test = execSync(`${serverlessExec} invoke test`);
- 
+    const test = execSync(`${serverlessExec} invoke test --compilers js:babel-register`);
     const result = new Buffer(test, 'base64').toString();
- 
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
     );
@@ -80,11 +82,7 @@ describe('integration', () => {
     );
 
     expect(result).to.have.string(
-      'dumpEnv\n    ✓ Check env'
-    );
-
-    expect(result).to.have.string(
-      '3 passing'
+      '2 passing'
     );
   });
 });
