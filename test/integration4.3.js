@@ -36,10 +36,10 @@ describe('integration (node v4.3 template)', () => {
   });
 
   it('should create test for hello function', () => {
-    const test = execSync(`${serverlessExec} create test --function hello`);
+    const test = execSync(`${serverlessExec} create test --function helloWorld`);
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
-      'serverless-mocha-plugin: created test/hello.js'
+      'serverless-mocha-plugin: created test/helloWorld.js'
     );
   });
 
@@ -57,7 +57,7 @@ describe('integration (node v4.3 template)', () => {
   it('should run tests successfully', () => {
     // change test files to use local proxy version of mocha plugin
     testUtils.replaceTextInFile(
-      path.join('test', 'hello.js'),
+      path.join('test', 'helloWorld.js'),
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
@@ -76,7 +76,7 @@ describe('integration (node v4.3 template)', () => {
     );
 
     expect(result).to.have.string(
-      'hello\n    ✓ implement tests here'
+      'helloWorld\n    ✓ implement tests here'
     );
 
     expect(result).to.have.string(

@@ -59,7 +59,7 @@ provider:
 functions:
   dumpEnv:
     handler: dumpenv.handler
-  hello:
+  helloWorld:
     handler: handler.hello
 
 #    The following are a few example events you can configure
