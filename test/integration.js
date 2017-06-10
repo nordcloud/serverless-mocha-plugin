@@ -66,8 +66,11 @@ describe('integration', () => {
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
+
     const test = execSync(`${serverlessExec} invoke test`);
+ 
     const result = new Buffer(test, 'base64').toString();
+ 
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
     );
@@ -77,7 +80,11 @@ describe('integration', () => {
     );
 
     expect(result).to.have.string(
-      '2 passing'
+      'dumpEnv\n    ✓ Check env'
+    );
+
+    expect(result).to.have.string(
+      '3 passing'
     );
   });
 });

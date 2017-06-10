@@ -20,6 +20,9 @@ service: mocha-test-suite
 provider:
   name: aws
   runtime: nodejs4.3
+  region: us-east-1
+  environment:
+    TEST_REGION: ${self:provider.region}
 
 # you can overwrite defaults here
 #  stage: dev
@@ -54,6 +57,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
+  dumpEnv:
+    handler: dumpenv.handler
   hello:
     handler: handler.hello
 
