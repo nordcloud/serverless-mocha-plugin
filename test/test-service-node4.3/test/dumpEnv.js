@@ -17,9 +17,7 @@ describe('dumpEnv', () => {
     done();
   });
 
-  it('Check env', () => {
-    return wrapped.run({}).then((response) => {
-      expect(process.env.TEST_REGION).to.be.equal('us-east-1');
-    });
-  });
+  it('Check env', () => wrapped.run({}).then((response) => {
+    expect(response.env.TEST_REGION).to.be.equal('us-east-1');
+  }));
 });

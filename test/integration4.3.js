@@ -68,9 +68,9 @@ describe('integration (node v4.3 template)', () => {
     );
 
     const test = execSync(`${serverlessExec} invoke test`);
- 
+
     const result = new Buffer(test, 'base64').toString();
- 
+
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
     );
