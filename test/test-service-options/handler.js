@@ -1,6 +1,6 @@
 'use strict';
 
-if(process.env.STAGE !== 'prod-stage-test') {
+if (process.env.STAGE !== 'prod-stage-test') {
   throw new Error('Environmental variable STAGE is not defined');
 }
 
@@ -13,7 +13,7 @@ module.exports.hello = (event, context, callback) => {
     }),
   };
 
-  if(process.env.STAGE !== 'prod-stage-test') {
+  if (process.env.STAGE !== 'prod-stage-test') {
     return callback('Environmental variable STAGE is incorrect');
   }
 
