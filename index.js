@@ -72,8 +72,8 @@ class mochaPlugin {
               },
               endPoint: {
                 usage: 'Add an http endpoint (e.g. --endPoint relative-path)',
-                shortcut: 'e'
-              }
+                shortcut: 'e',
+              },
             },
           },
         },
@@ -367,13 +367,13 @@ class mochaPlugin {
         }
 
         const funcDoc = {};
-        const funcData = {handler};
+        const funcData = { handler };
         if (this.options.endPoint) {
           funcData.events = [{
             http: {
               method: 'post',
-              path: this.options.endPoint
-            }
+              path: this.options.endPoint,
+            },
           }];
         }
         funcDoc[functionName] = this.serverless.service.functions[functionName] = funcData;
