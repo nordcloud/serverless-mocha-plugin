@@ -95,6 +95,10 @@ class mochaPlugin {
                 usage: 'Options for mocha reporter',
                 shortcut: 'O',
               },
+              'grep': {
+                usage: 'Run only matching tests',
+                shortcut: 'G',
+              },
               path: {
                 usage: 'Path for the tests for running tests in other than default "test" folder',
               },
@@ -187,6 +191,10 @@ class mochaPlugin {
                 });
               }
               mocha.reporter(reporter, reporterOptions);
+            }
+
+            if (myModule.options.grep) {
+              mocha.grep(myModule.options.grep);
             }
 
             const compilers = myModule.options.compilers;
