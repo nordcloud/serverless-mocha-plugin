@@ -73,7 +73,7 @@ NOTE: Live running does not currently work. Waiting for serverless 1.0 to finali
 
 ### Running tests
 
-Tests can be run directly using the "invoke test" command. This also initializes the environment variables based on your serverless.yml file.
+Tests can be run directly using the "invoke test" command. This also initializes the environment variables based on your serverless.yml file and the SERVERLESS_TEST_ROOT variable that defines the root for the code to be tested.
 
 ```
 sls invoke test [--stage stage] [--region region] [-f function1] [-f function2] [...]

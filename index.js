@@ -135,6 +135,9 @@ class mochaPlugin {
 
     const stage = this.options.stage;
     const region = this.options.region;
+    
+    // set the SERVERLESS_TEST_ROOT variable to define root for tests
+    process.env['SERVERLESS_TEST_ROOT'] = this.serverless.config.servicePath;
 
     this.serverless.service.load({
       stage,
