@@ -99,6 +99,10 @@ class mochaPlugin {
                 usage: 'Run only matching tests',
                 shortcut: 'G',
               },
+              live: {
+                usage: 'Run the Lambda function in AWS',
+                shortcut: 'l',
+              },
               path: {
                 usage: 'Path for the tests for running tests in other than default "test" folder',
               },
@@ -205,6 +209,15 @@ class mochaPlugin {
 
             if (myModule.options.grep) {
               mocha.grep(myModule.options.grep);
+            }
+
+            if (myModule.options.live) {
+              /* eslint-disable dot-notation */
+              process.env['SERVERLESS_MOCHA_PLUGIN_LIVE'] = true;
+              process.env['SERVERLESS_MOCHA_PLUGIN_REGION'] = region || inited.provider.region;
+              process.env['SERVERLESS_MOCHA_PLUGIN_SERVICE'] = inited.service;
+              process.env['SERVERLESS_MOCHA_PLUGIN_STAGE'] = stage || inited.provider.stage;
+              /* eslint-enable dot-notation */
             }
 
             const compilers = myModule.options.compilers;
@@ -416,3 +429,15 @@ class mochaPlugin {
 module.exports = mochaPlugin;
 module.exports.lambdaWrapper = lambdaWrapper;
 module.exports.chai = chai;
+module.exports.initLiveModule = (modName) => {
+  const functionName = [
+    process.env.SERVERLESS_MOCHA_PLUGIN_SERVICE,
+    process.env.SERVERLESS_MOCHA_PLUGIN_STAGE,
+    modName,
+  ].join('-');
+
+  return {
+    region: process.env.SERVERLESS_MOCHA_PLUGIN_REGION,
+    lambdaFunction: functionName,
+  };
+};

@@ -5,7 +5,7 @@
 A Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which
 adds support for test driven development using [mocha](https://mochajs.org/)
 
-**THIS PLUGIN REQUIRES SERVERLESS V1.0 BETA OR NEWER!**
+**THIS PLUGIN REQUIRES SERVERLESS V1!**
 
 More familiar with Jest? Use [serverless-jest-plugin](https://github.com/sc5/serverless-jest-plugin).
 
@@ -92,6 +92,8 @@ using using .timeout(milliseconds) with the define, after, before or it -blocks.
 ```
 
 To run test in specific folder use `--path` or `-p` switch.
+
+To run tests live against the actual deployed Lambdas, use the '--live' or '-l' switch. Please note that this will work only for tests created with module version 1.4 or higher.
 
 ### Using own template for a test file
 
