@@ -95,7 +95,7 @@ class mochaPlugin {
                 usage: 'Options for mocha reporter',
                 shortcut: 'O',
               },
-              'grep': {
+              grep: {
                 usage: 'Run only matching tests',
                 shortcut: 'G',
               },
@@ -139,20 +139,30 @@ class mochaPlugin {
 
     const stage = this.options.stage;
     const region = this.options.region;
-    
+
     // set the SERVERLESS_TEST_ROOT variable to define root for tests
-    process.env['SERVERLESS_TEST_ROOT'] = this.serverless.config.servicePath;
+    const testRootVar = 'SERVERLESS_TEST_ROOT';
+    process.env[testRootVar] = this.serverless.config.servicePath;
 
     this.serverless.service.load({
       stage,
       region,
     })
       .then((inited) => {
-        // Verify that the service runtime matches with the current runtime 
-        let nodeVersion = (typeof(process.versions) === 'object')? process.versions.node : process.versions;
-        nodeVersion = nodeVersion.replace(/\.[^.]*$/,'');
-        if (`nodejs${nodeVersion}`!== inited.provider.runtime) {
-          this.serverless.cli.log(`Tests being run with nodejs${nodeVersion}, service is using ${inited.provider.runtime}. Tests may not be reliable.`);
+        // Verify that the service runtime matches with the current runtime
+        let nodeVersion;
+        if (typeof process.versions === 'object') {
+          nodeVersion = process.versions.node;
+        } else {
+          nodeVersion = process.versions;
+        }
+        nodeVersion = nodeVersion.replace(/\.[^.]*$/, '');
+        if (`nodejs${nodeVersion}` !== inited.provider.runtime) {
+          let errorMsg = `Tests being run with nodejs${nodeVersion}, `;
+          errorMsg = `${errorMsg} service is using ${inited.provider.runtime}.`;
+          errorMsg = `${errorMsg} Tests may not be reliable.`;
+
+          this.serverless.cli.log(errorMsg);
         }
 
         myModule.serverless.environment = inited.environment;

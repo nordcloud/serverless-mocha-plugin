@@ -9,21 +9,19 @@ const mochaPlugin = require('../.serverless_plugins/serverless-mocha-plugin/inde
 const lambdaWrapper = mochaPlugin.lambdaWrapper;
 const expect = mochaPlugin.chai.expect;
 const wrapped = lambdaWrapper.wrap(mod, { handler: 'exception' });
-console.log('TrhowException tests');
 
 describe('throwException', () => {
   before((done) => {
 //  lambdaWrapper.init(liveFunction); // Run the deployed lambda
-
     done();
   });
 
   it('Get Exception', () => wrapped.run({}).then((response) => {
-    expect(response).to.be.null(); 
+    expect(response).to.be.null();
   }, (error) => {
-    expect(error).to.be.equal('MyException');
+    expect(error.toString()).to.match(/MyException/);
   })
   .catch((ex) => {
-    expect(ex).to.be.null(); 
+    expect(ex).to.be.null();
   }));
 });

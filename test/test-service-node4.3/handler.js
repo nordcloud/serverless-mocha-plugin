@@ -16,5 +16,5 @@ module.exports.hello = (event, context, callback) => {
 };
 
 module.exports.exception = () => {
-  throw 'MyException';
-}
+  throw new Error('MyException');
+};
