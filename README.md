@@ -73,8 +73,7 @@ NOTE: Live running does not currently work. Waiting for serverless 1.0 to finali
 
 ### Running tests
 
-Tests can be run directly using Mocha (in which case it needs to be installed to your project or globally)
-or using the "invoke test" command
+Tests can be run directly using the "invoke test" command. This also initializes the environment variables based on your serverless.yml file.
 
 ```
 sls invoke test [--stage stage] [--region region] [-f function1] [-f function2] [...]
