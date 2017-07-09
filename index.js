@@ -144,6 +144,13 @@ class mochaPlugin {
       region,
     })
       .then((inited) => {
+        // Verify that the service runtime matches with the current runtime 
+        let nodeVersion = (typeof(process.versions) === 'object')? process.versions.node : process.versions;
+        nodeVersion = nodeVersion.replace(/\.[^.]*$/,'');
+        if (`nodejs${nodeVersion}`!== inited.provider.runtime) {
+          this.serverless.cli.log(`Tests being run with nodejs${nodeVersion}, service is using ${inited.provider.runtime}. Tests may not be reliable.`);
+        }
+
         myModule.serverless.environment = inited.environment;
         const vars = new myModule.serverless.classes.Variables(myModule.serverless);
         vars.populateService(this.options)
