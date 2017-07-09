@@ -35,4 +35,7 @@ node_modules
 # IDE
 .idea
 
+# Mac
+.DS_Store
+
 tmp
