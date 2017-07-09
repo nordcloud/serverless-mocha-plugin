@@ -19,7 +19,7 @@ describe('integration (node v4.3 template)', () => {
     fse.mkdirsSync(tmpDir);
     fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node4.3'), tmpDir);
     process.chdir(tmpDir);
-  });
+   });
 
   it('should contain test params in cli info', () => {
     const test = execSync(`${serverlessExec}`);
@@ -66,11 +66,10 @@ describe('integration (node v4.3 template)', () => {
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
-
     const test = execSync(`${serverlessExec} invoke test`);
 
     const result = new Buffer(test, 'base64').toString();
-
+  
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
     );
@@ -84,7 +83,11 @@ describe('integration (node v4.3 template)', () => {
     );
 
     expect(result).to.have.string(
-      '3 passing'
+      'throwException\n    ✓ Get Exception'
+    );
+
+    expect(result).to.have.string(
+      '4 passing'
     );
   });
 });

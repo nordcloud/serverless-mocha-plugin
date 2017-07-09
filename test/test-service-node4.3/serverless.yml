@@ -61,6 +61,8 @@ functions:
     handler: dumpenv.handler
   helloWorld:
     handler: handler.hello
+  throwException:
+    handler: handler.exception
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
