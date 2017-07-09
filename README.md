@@ -85,7 +85,12 @@ To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be 
 If no function names are passed to "invoke test", all tests are run from the test/ directory
 
 The default timeout for tests is 6 seconds. In case you need to apply a different timeout, that can be done in the test file 
-using using this.timeout(milliseconds) in the define, after, before or it -blocks.
+using using .timeout(milliseconds) with the define, after, before or it -blocks. e.g.
+```
+  it('implement tests here', () => {
+    ...
+  }).timeout(xxx);
+```
 
 To run test in specific folder use `--path` or `-p` switch.
 
