@@ -70,6 +70,9 @@ class mochaPlugin {
                 usage: 'Path for the tests (e.g. --path tests)',
                 shortcut: 'p',
               },
+              'httpEvent': {
+                usage: 'Add an http endpoint (e.g. --httpEvent "verb relative-path")'
+              },
             },
           },
         },
@@ -420,9 +423,14 @@ class mochaPlugin {
         }
 
         const funcDoc = {};
-        funcDoc[functionName] = this.serverless.service.functions[functionName] = {
-          handler,
-        };
+        const funcData = { handler };
+        if (this.options.httpEvent) {
+          this.serverless.cli.log(`Add http event '${this.options.httpEvent}'`);
+          funcData.events = [{
+            http: this.options.httpEvent,
+          }];
+        }
+        funcDoc[functionName] = this.serverless.service.functions[functionName] = funcData;
 
         if (ymlEditor.insertChild('functions', funcDoc)) {
           const errorMessage = [

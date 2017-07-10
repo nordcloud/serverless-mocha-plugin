@@ -51,7 +51,7 @@
     "chai": "^3.5.0",
     "ejs": "^2.5.2",
     "fs-extra": "^1.0.0",
-    "lambda-wrapper": "^0.2.0",
+    "lambda-wrapper": "^0.2.1",
     "mocha": "^3.1.2",
     "yaml-edit": "^0.1.3"
   }

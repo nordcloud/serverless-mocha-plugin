@@ -48,12 +48,23 @@ sls create function -f myFunction --handler functions/myFunction/index.handler
 ```
 
 creates a new function `myFunction` into `serverless.yml` with a code template for
-the handler in `functions/myFunction/index.js` and a Javascript function `module.exports.handler` 
-as the entrypoint for the Lambda function. A test template is also created into `test/myFunction.js`. Optionally tests can be created to specific folder using `--path` or `-p` switch, e.g. 
+the handler in `functions/myFunction/index.js` and a Javascript function `module.exports.handler` as the entrypoint for the Lambda function. A test template is also created into `test/myFunction.js`. Optionally tests can be created to specific folder using `--path` or `-p` switch, e.g. 
 
 ```
 sls create function -f myFunction --handler functions/myFunction/index.handler --path tests
 ```
+
+To create an http event for the lambda, add the --httpEvent parameter, i.e.
+
+```
+sls create function -f myFunction --handler functions/myFunction/index.handler --httpEvent "[httpVerb] [relativePath]"
+```
+
+e.g.
+
+```
+sls create function -f myFunction --handler functions/myFunction/index.handler --httpEvent "post myResource"
+````
 
 ### Creating tests
 
