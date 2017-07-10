@@ -70,8 +70,8 @@ class mochaPlugin {
                 usage: 'Path for the tests (e.g. --path tests)',
                 shortcut: 'p',
               },
-              'httpEvent': {
-                usage: 'Add an http endpoint (e.g. --httpEvent "verb relative-path")'
+              httpEvent: {
+                usage: 'Add an http endpoint (e.g. --httpEvent "verb relative-path")',
               },
             },
           },
