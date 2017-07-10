@@ -63,8 +63,8 @@ sls create function -f myFunction --handler functions/myFunction/index.handler -
 e.g.
 
 ```
-sls create function -f myFunction --handler functions/myFunction/index.handler --httpEvent "post myResource"
-````
+sls create function -f myFunction --handler functions/myFunction/index.handler --httpEvent "post myResource" --httpEvent "get myResource"
+```
 
 ### Creating tests
 

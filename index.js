@@ -425,10 +425,23 @@ class mochaPlugin {
         const funcDoc = {};
         const funcData = { handler };
         if (this.options.httpEvent) {
-          this.serverless.cli.log(`Add http event '${this.options.httpEvent}'`);
-          funcData.events = [{
-            http: this.options.httpEvent,
-          }];
+          let events = [];
+          if (typeof this.options.httpEvent === 'string') {
+            events = [
+              this.options.httpEvent,
+            ];
+          } else {
+            events = this.options.httpEvent;
+          }
+          funcData.events = [];
+
+          events.forEach((val) => {
+            this.serverless.cli.log(`Add http event '${val}'`);
+
+            funcData.events.push({
+              http: val,
+            });
+          });
         }
         funcDoc[functionName] = this.serverless.service.functions[functionName] = funcData;
 
