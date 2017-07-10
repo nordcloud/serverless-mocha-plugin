@@ -97,10 +97,7 @@ To run tests live against the actual deployed Lambdas, use the '--live' or '-l' 
 
 To run tests e.g. against built artefacts that reside in some other directory, use the '--root' or '-r' switch. e.g.
 ```
-  sls package -p testBuild       
-  pushd testBuild    
-  unzip [myServiceName].zip
-  popd 
+  sls webpack -o testBuild
   sls invoke test -r testBuild
   rm -rf testBuild
 ```
