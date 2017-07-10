@@ -103,6 +103,10 @@ class mochaPlugin {
                 usage: 'Run the Lambda function in AWS',
                 shortcut: 'l',
               },
+              root: {
+                usage: 'Service root for running tests',
+                shortcut: 'r',
+              },
               path: {
                 usage: 'Path for the tests for running tests in other than default "test" folder',
               },
@@ -143,10 +147,6 @@ class mochaPlugin {
 
     const stage = this.options.stage;
     const region = this.options.region;
-
-    // set the SERVERLESS_TEST_ROOT variable to define root for tests
-    const testRootVar = 'SERVERLESS_TEST_ROOT';
-    process.env[testRootVar] = this.serverless.config.servicePath;
 
     this.serverless.service.load({
       stage,
@@ -211,14 +211,30 @@ class mochaPlugin {
               mocha.grep(myModule.options.grep);
             }
 
+            // set the SERVERLESS_TEST_ROOT variable to define root for tests
+            let rootFolder = this.serverless.config.servicePath;
+
+            if (myModule.options.root) {
+              rootFolder = myModule.options.root;
+              myModule.serverless.cli.log(`Run tests against code under '${rootFolder}'`);
+            }
+
+            // Use full paths to ensure that the code is correctly required in tests
+            if (rootFolder.charAt(0) !== '/') {
+              const currDir = process.cwd();
+              rootFolder = `${currDir}/${rootFolder}`;
+            }
+
+            /* eslint-disable dot-notation */
+            process.env['SERVERLESS_TEST_ROOT'] = rootFolder;
+
             if (myModule.options.live) {
-              /* eslint-disable dot-notation */
               process.env['SERVERLESS_MOCHA_PLUGIN_LIVE'] = true;
               process.env['SERVERLESS_MOCHA_PLUGIN_REGION'] = region || inited.provider.region;
               process.env['SERVERLESS_MOCHA_PLUGIN_SERVICE'] = inited.service;
               process.env['SERVERLESS_MOCHA_PLUGIN_STAGE'] = stage || inited.provider.stage;
-              /* eslint-enable dot-notation */
             }
+            /* eslint-enable dot-notation */
 
             const compilers = myModule.options.compilers;
             if (typeof compilers !== 'undefined') {

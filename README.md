@@ -95,6 +95,17 @@ To run test in specific folder use `--path` or `-p` switch.
 
 To run tests live against the actual deployed Lambdas, use the '--live' or '-l' switch. Please note that this will work only for tests created with module version 1.4 or higher.
 
+To run tests e.g. against built artefacts that reside in some other directory, use the '--root' or '-r' switch. e.g.
+```
+  sls package -p testBuild       
+  pushd testBuild    
+  unzip [myServiceName].zip
+  popd 
+  sls invoke test -r testBuild
+  rm -rf testBuild
+```
+
+
 ### Using own template for a test file
 
 The templates to use for new function Files can be determined with the custom `testTemplate` configuration in `serverless.yml`
