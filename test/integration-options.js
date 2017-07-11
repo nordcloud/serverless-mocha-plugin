@@ -11,7 +11,7 @@ const serverless = new Serverless();
 serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
-describe('integration with stage option', () => {
+describe('integration with options in stage prod', () => {
   before(() => {
     // create temporary directory and copy test service there
     process.env.MOCHA_PLUGIN_TEST_DIR = path.join(__dirname);
@@ -19,6 +19,7 @@ describe('integration with stage option', () => {
     fse.mkdirsSync(tmpDir);
     fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-options'), tmpDir);
     process.chdir(tmpDir);
+    execSync(`ln -s ${process.env.MOCHA_PLUGIN_TEST_DIR}/../node_modules ${tmpDir}/`);
   });
 
   it('should contain test params in cli info', () => {
@@ -46,8 +47,8 @@ describe('integration with stage option', () => {
   it('should create function goodbye with 2 http endpoints', () => {
     const test = execSync(
       `${serverlessExec}` +
-      ' create function --function goodbye --handler goodbye/index.handler --stage prod ' +
-      '--httpEvent "post event" --httpEvent "get event"'
+      ' create function --function goodbye --handler goodbye/index.handler ' +
+      '--httpEvent "post event" --httpEvent "get event" --stage prod'
     );
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
@@ -61,7 +62,7 @@ describe('integration with stage option', () => {
     );
   });
 
-  it('should run tests successfully', () => {
+  it('should run tests successfully in stage prod', () => {
     // change test files to use local proxy version of mocha plugin
     testUtils.replaceTextInFile(
       path.join('test', 'hello.js'),
@@ -85,6 +86,42 @@ describe('integration with stage option', () => {
 
     expect(result).to.have.string(
       '2 passing'
+    );
+  });
+
+  it('should run tests successfully against built package', () => {
+    // change test files to use local proxy version of mocha plugin
+    // These have been done earlier
+    execSync(`${serverlessExec} webpack -o testBuild --stage prod`);
+
+    const test = execSync(`${serverlessExec} invoke test --stage prod --root testBuild`);
+    const result = new Buffer(test, 'base64').toString();
+
+    expect(result).to.have.string(
+      'Run tests against code under \'testBuild\''
+    );
+    expect(result).to.have.string(
+      'goodbye\n    ✓ implement tests here'
+    );
+
+    expect(result).to.have.string(
+      'hello\n    ✓ implement tests here'
+    );
+
+    expect(result).to.have.string(
+      '2 passing'
+    );
+  });
+
+  it('should limit tests to run with --grep option', () => {
+    const test = execSync(`${serverlessExec} invoke test --grep goodbye --stage prod`);
+    const result = new Buffer(test, 'base64').toString();
+    expect(result).to.have.string(
+      'goodbye\n    ✓ implement tests here'
+    );
+
+    expect(result).to.have.string(
+      '1 passing'
     );
   });
 });
