@@ -146,7 +146,12 @@ custom:
 
 ## Release History (1.x)
 
-* 2017/07/09 - v1.4.0 - Add --live switch, add --grep switch, verify that the test runtime matches the service runtime, upgrade lambda-wrapper (returns exceptions as errors)
+* 2017/07/11 - v1.4.1 - Add option --root for running tests on e.g. webpack build results residing in other directories,
+                        add option --httpEvent to create http events when creating functions
+* 2017/07/09 - v1.4.0 - Add --live switch, 
+                        add --grep switch, 
+                        verify that the test runtime matches the service runtime,
+                        upgrade lambda-wrapper (returns exceptions as errors)
 * 2016/12/21 - v1.3.2 - Fix population of environment variables
 * 2016/11/28 - v1.3.1 - Added support for environment variables in Serverless 1.2
 * 2016/11/09 - v1.2.0 - Added ability to add function / test templates
