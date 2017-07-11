@@ -43,12 +43,19 @@ describe('integration with stage option', () => {
     );
   });
 
-  it('should create function goodbye', () => {
+  it('should create function goodbye with 2 http endpoints', () => {
     const test = execSync(
       `${serverlessExec}` +
-      ' create function --function goodbye --handler goodbye/index.handler --stage prod'
+      ' create function --function goodbye --handler goodbye/index.handler --stage prod ' +
+      '--httpEvent "post event" --httpEvent "get event"'
     );
     const result = new Buffer(test, 'base64').toString();
+    expect(result).to.have.string(
+      'Add http event \'post event\''
+    );
+    expect(result).to.have.string(
+      'Add http event \'get event\''
+    );
     expect(result).to.have.string(
       'serverless-mocha-plugin: created test/goodbye.js'
     );
