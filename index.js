@@ -466,7 +466,7 @@ class mochaPlugin {
 module.exports = mochaPlugin;
 module.exports.lambdaWrapper = lambdaWrapper;
 module.exports.chai = chai;
-module.exports.initLiveModule = (modName) => {
+const initLiveModule = module.exports.initLiveModule = (modName) => {
   const functionName = [
     process.env.SERVERLESS_MOCHA_PLUGIN_SERVICE,
     process.env.SERVERLESS_MOCHA_PLUGIN_STAGE,
@@ -477,4 +477,22 @@ module.exports.initLiveModule = (modName) => {
     region: process.env.SERVERLESS_MOCHA_PLUGIN_REGION,
     lambdaFunction: functionName,
   };
+};
+
+module.exports.getWrapper = (modName, modPath, handler) => {
+  let wrapped;
+  // TODO: make this fetch the data from serverless.yml
+
+  if (process.env.SERVERLESS_MOCHA_PLUGIN_LIVE) {
+    const mod = initLiveModule(modName);
+    wrapped = lambdaWrapper.wrap(mod);
+  } else {
+    /* eslint-disable global-require */
+    const mod = require(process.env.SERVERLESS_TEST_ROOT + modPath);
+    /* eslint-enable global-require */
+    wrapped = lambdaWrapper.wrap(mod, {
+      handler,
+    });
+  }
+  return wrapped;
 };
