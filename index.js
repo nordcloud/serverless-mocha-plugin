@@ -141,7 +141,7 @@ class mochaPlugin {
 
   runTests() {
     const myModule = this;
-    const funcName = this.options.f || this.options.function || [];
+    const funcOption = this.options.f || this.options.function || [];
     const testsPath = this.options.p || this.options.path || utils.getTestsFolder();
     const testFileMap = {};
     const mocha = new Mocha({
@@ -151,6 +151,12 @@ class mochaPlugin {
     const stage = this.options.stage;
     const region = this.options.region;
 
+    let funcNames = [];
+    if (typeof funcOption === 'string') {
+      funcNames = [funcOption];
+    } else if (funcOption.length > 0) {
+      funcNames = funcOption;
+    }
     this.serverless.service.load({
       stage,
       region,
@@ -175,19 +181,29 @@ class mochaPlugin {
         myModule.serverless.environment = inited.environment;
         const vars = new myModule.serverless.classes.Variables(myModule.serverless);
         vars.populateService(this.options)
-          .then(() => myModule.getFunctions(funcName))
-          .then(utils.getTestFiles)
+          .then(() => myModule.getFunctions(funcNames))
+          .then((funcs) => utils.getTestFiles(funcs, testsPath, funcNames))
           .then((funcs) => {
-            const funcNames = Object.keys(funcs);
+            // Run the tests that were actually found
+            funcNames = Object.keys(funcs);
+
             if (funcNames.length === 0) {
               return myModule.serverless.cli.log('No tests to run');
             }
+
             funcNames.forEach((func) => {
-              utils.setEnv(this.serverless, func);
-              const testPath = path.join(testsPath, `${func}.js`);
-              if (fse.existsSync(testPath)) {
-                testFileMap[func] = funcs[func];
-                mocha.addFile(testPath);
+              if (funcs[func].mochaPlugin) {
+                if (funcs[func].handler) {
+                    // Map only functions
+                  testFileMap[func] = funcs[func];
+                  utils.setEnv(this.serverless, func);
+                }
+
+                const testPath = funcs[func].mochaPlugin.testPath;
+
+                if (fse.existsSync(testPath)) {
+                  mocha.addFile(testPath);
+                }
               }
             });
 
@@ -262,11 +278,15 @@ class mochaPlugin {
             })
               .on('test', (suite) => {
                 const testFuncName = utils.funcNameFromPath(suite.file);
-                const func = testFileMap[testFuncName];
-                if (func) {
-                  utils.setEnv(myModule.serverless, funcName);
+
+                // set env only for functions
+                if (testFileMap[testFuncName]) {
+                  utils.setEnv(myModule.serverless, testFuncName);
+                } else {
+                  utils.setEnv(myModule.serverless);
                 }
               });
+
             return null;
           }, error => myModule.serverless.cli.log(error));
       });
@@ -326,18 +346,14 @@ class mochaPlugin {
 
   // Helper functions
 
-  getFunctions(funcNames) {
+  getFunctions(funcList) {
     const myModule = this;
-    let funcList = funcNames;
 
     return new BbPromise((resolve) => {
       const funcObjs = {};
       const allFuncs = myModule.serverless.service.functions;
-      if (typeof funcNames === 'string') {
-        funcList = [funcNames];
-      }
 
-      if (funcNames.length === 0) {
+      if (funcList.length === 0) {
         return resolve(allFuncs);
       }
 

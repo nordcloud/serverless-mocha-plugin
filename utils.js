@@ -14,16 +14,24 @@ function getTestFilePath(funcName, testsRootFolder) {
   return path.join(getTestsFolder(testsRootFolder), `${funcName.replace(/.*\//g, '')}.js`);
 }
 
-// getTestFiles. If no functions provided, returns all files
-function getTestFiles(funcs) {
+// getTestFiles. Returns all test files, attaches to functions
+function getTestFiles(funcs, testFolder, funcList) {
   return new BbPromise((resolve) => {
-    const funcNames = Object.keys(funcs);
-    const resFuncs = funcs;
-    if (funcNames && funcNames.length > 0) {
-      funcNames.forEach((val) => {
-        resFuncs[val].mochaPlugin = {
-          testPath: getTestFilePath(val),
-        };
+    const funcFiles = fs.readdirSync(testFolder);
+    if (funcFiles.length > 0) {
+      const resFuncs = {};
+      funcFiles.forEach((val) => {
+        if (path.extname(val) === '.js') {
+          const base = val.replace(/.js$/, '');
+          // Create test for non-functions only if no funcList
+          if (funcs[base] || funcList.length === 0) {
+            resFuncs[base] = funcs[base] || { };
+
+            resFuncs[base].mochaPlugin = {
+              testPath: path.join(getTestsFolder(testFolder), val),
+            };
+          }
+        }
       });
       return resolve(resFuncs);
     }
@@ -62,10 +70,11 @@ function funcNameFromPath(filePath) {
 
 function setEnv(serverless, funcName) {
   const serviceVars = serverless.service.provider.environment || {};
-  const functionVars =
-    serverless.service.functions[funcName] ?
-      serverless.service.functions[funcName].environment :
-      {};
+  let functionVars = {};
+  if (funcName && serverless.service.functions[funcName]) {
+    functionVars = serverless.service.functions[funcName].environment || {};
+  }
+
   return Object.assign(
     process.env,
     serviceVars,
