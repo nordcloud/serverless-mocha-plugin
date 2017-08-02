@@ -74,7 +74,6 @@ function setEnv(serverless, funcName) {
   if (funcName && serverless.service.functions[funcName]) {
     functionVars = serverless.service.functions[funcName].environment || {};
   }
-
   return Object.assign(
     process.env,
     serviceVars,
