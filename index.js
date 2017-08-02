@@ -186,7 +186,6 @@ class mochaPlugin {
           .then((funcs) => {
             // Run the tests that were actually found
             funcNames = Object.keys(funcs);
-
             if (funcNames.length === 0) {
               return myModule.serverless.cli.log('No tests to run');
             }
@@ -197,6 +196,8 @@ class mochaPlugin {
                     // Map only functions
                   testFileMap[func] = funcs[func];
                   utils.setEnv(this.serverless, func);
+                } else {
+                  utils.setEnv(this.serverless);
                 }
 
                 const testPath = funcs[func].mochaPlugin.testPath;
