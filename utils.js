@@ -14,15 +14,35 @@ function getTestFilePath(funcName, testsRootFolder) {
   return path.join(getTestsFolder(testsRootFolder), `${funcName.replace(/.*\//g, '')}.js`);
 }
 
+function traverseTestFolder(testFolder, prefix) {
+  let funcFiles = [];
+  const dirContents = fs.readdirSync(testFolder);
+
+  dirContents.forEach((val) => {
+    const stats = fs.statSync(path.join(testFolder, val));
+    if (stats.isFile()) {
+      funcFiles.push(prefix ? path.join(prefix, val) : val);
+    } else {
+      const subContents = traverseTestFolder(
+        path.join(testFolder, val), prefix ? path.join(prefix, val) : val
+      );
+      subContents.forEach((subval) => {
+        funcFiles.push(subval);
+      })
+    }
+  });
+  return funcFiles;
+}
+
 // getTestFiles. Returns all test files, attaches to functions
 function getTestFiles(funcs, testFolder, funcList) {
   return new BbPromise((resolve) => {
-    const funcFiles = fs.readdirSync(testFolder);
+    const funcFiles = traverseTestFolder(testFolder);
     if (funcFiles.length > 0) {
       const resFuncs = {};
       funcFiles.forEach((val) => {
         if (path.extname(val) === '.js') {
-          const base = val.replace(/.js$/, '');
+          const base = path.basename(val).replace(/.js$/, '');
           // Create test for non-functions only if no funcList
           if (funcs[base] || funcList.length === 0) {
             resFuncs[base] = funcs[base] || { };
