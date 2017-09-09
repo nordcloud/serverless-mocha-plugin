@@ -15,7 +15,7 @@ function getTestFilePath(funcName, testsRootFolder) {
 }
 
 function traverseTestFolder(testFolder, prefix) {
-  let funcFiles = [];
+  const funcFiles = [];
   const dirContents = fs.readdirSync(testFolder);
 
   dirContents.forEach((val) => {
@@ -28,7 +28,7 @@ function traverseTestFolder(testFolder, prefix) {
       );
       subContents.forEach((subval) => {
         funcFiles.push(subval);
-      })
+      });
     }
   });
   return funcFiles;

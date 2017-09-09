@@ -240,7 +240,7 @@ class mochaPlugin {
             }
 
             // Use full paths to ensure that the code is correctly required in tests
-            if (! path.isAbsolute(rootFolder)) {
+            if (!path.isAbsolute(rootFolder)) {
               const currDir = process.cwd();
               rootFolder = path.join(currDir, rootFolder);
             }
