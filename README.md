@@ -92,7 +92,7 @@ sls invoke test [--stage stage] [--region region] [-f function1] [-f function2] 
 
 To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be passed with the -O switch.
 
-If no function names are passed to "invoke test", all tests are run from the test/ directory
+If no function names are passed to "invoke test", all tests are run from the test/ directory and subdirectories.
 
 The default timeout for tests is 6 seconds. In case you need to apply a different timeout, that can be done in the test file 
 using using .timeout(milliseconds) with the define, after, before or it -blocks. e.g.
