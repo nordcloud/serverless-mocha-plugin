@@ -118,7 +118,7 @@ To run tests e.g. against built artefacts that reside in some other directory, u
 
 The templates to use for new function Files can be determined with the custom `testTemplate` configuration in `serverless.yml`
 
-```
+```yaml
 custom:
   serverless-mocha-plugin:
     testTemplate: templates/myTest.js
@@ -136,16 +136,53 @@ If you'd like to get more information on the template engine, you check document
 
 The templates to use for new function Files can be determined with the custom `functionTemplate` configuration in `serverless.yml`
 
-```
+```yaml
 custom:
   serverless-mocha-plugin:
     functionTemplate: templates/myFunction.js
 ```
 
+### Running commands before / after tests
 
+The plugin can be configured to run commands before / after the tests. This is done by setting preTestCommands and postTestCommands in the plugin configuration.
 
+For example, start serverless-offline before tests and stop it after tests using the following configuration:
+
+```yaml
+custom:
+  serverless-mocha-plugin:
+    preTestCommands: 
+      - bash startOffline.sh
+    postTestCommands:
+      - bash stopOffline.sh
+```
+
+Sample startOffline.sh:
+```
+TMPFILE=/var/tmp/offline$$.log
+if [ -f .offline.pid ]; then
+    echo "Found file .offline.pid. Not starting."
+    exit 1
+fi
+
+serverless offline start 2>1 > $TMPFILE &
+PID=$!
+echo $PID > .offline.pid
+
+while ! grep "Offline listening" $TMPFILE
+do sleep 1; done
+
+rm $TMPFILE
+```
+
+Sample stopOffline.sh
+```
+kill `cat .offline.pid`
+rm .offline.pid
+```
 ## Release History (1.x)
 
+* 2017/09/10 - v1.7.0 - ability to run scripts before / after tests
 * 2017/09/09 - v1.6.0 - also run tests from subfolders of test
 * 2017/07/11 - v1.4.1 - Add option --root for running tests on e.g. webpack build results residing in other directories,
                         add option --httpEvent to create http events when creating functions

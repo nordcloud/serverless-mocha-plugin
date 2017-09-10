@@ -14,6 +14,7 @@ const fse = require('fs-extra');
 const utils = require('./utils');
 const BbPromise = require('bluebird');
 const yamlEdit = require('yaml-edit');
+const execSync = require('child_process').execSync;
 
 const testTemplateFile = path.join('templates', 'test-template.ejs');
 const functionTemplateFile = path.join('templates', 'function-template.ejs');
@@ -139,6 +140,23 @@ class mochaPlugin {
     };
   }
 
+  // Run pre/postTest scriprs
+  runScripts(testStage) {
+    const myModule = this;
+    return new Promise((succeed) => {
+      const cmds = myModule.config[testStage] || [];
+      cmds.forEach((cmd) => {
+        this.serverless.cli.log(`Run command: ${cmd}`);
+        const cmdOut = execSync(cmd);
+        if (process.env.SLS_DEBUG) {
+          const output = new Buffer(cmdOut, 'base64').toString();
+          this.serverless.cli.log(output);
+        }
+      });
+      succeed();
+    });
+  }
+
   runTests() {
     const myModule = this;
     const funcOption = this.options.f || this.options.function || [];
@@ -162,6 +180,7 @@ class mochaPlugin {
       region,
     })
       .then((inited) => {
+        myModule.config = (inited.custom || {})['serverless-mocha-plugin'] || {};
         // Verify that the service runtime matches with the current runtime
         let nodeVersion;
         if (typeof process.versions === 'object') {
@@ -181,6 +200,7 @@ class mochaPlugin {
         myModule.serverless.environment = inited.environment;
         const vars = new myModule.serverless.classes.Variables(myModule.serverless);
         vars.populateService(this.options)
+          .then(() => myModule.runScripts('preTestCommands'))
           .then(() => myModule.getFunctions(funcNames))
           .then((funcs) => utils.getTestFiles(funcs, testsPath, funcNames))
           .then((funcs) => {
@@ -273,10 +293,12 @@ class mochaPlugin {
             }
 
             mocha.run((failures) => {
-              process.on('exit', () => {
-                process.exit(failures);  // exit with non-zero status if there were failures
-              });
-            })
+              process
+              .on('exit', () => {
+                myModule.runScripts('postTestCommands').then(() => {
+                  process.exit(failures);  // exit with non-zero status if there were failures
+                });
+              })
               .on('test', (suite) => {
                 const testFuncName = utils.funcNameFromPath(suite.file);
 
@@ -287,6 +309,7 @@ class mochaPlugin {
                   utils.setEnv(myModule.serverless);
                 }
               });
+            });
 
             return null;
           }, error => myModule.serverless.cli.log(error));
