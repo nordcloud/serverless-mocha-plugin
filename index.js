@@ -119,7 +119,7 @@ class mochaPlugin {
               },
               exitoncomplete: {
                 usage: 'Force process exit on mocha runner "end" event',
-              }
+              },
             },
           },
         },
