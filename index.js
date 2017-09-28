@@ -313,7 +313,10 @@ class mochaPlugin {
                 }
               });
             });
-            myModule.options.exitoncomplete && runner.on('end', () => process.exit());
+
+            if(myModule.options.exitoncomplete) {
+                runner.on('end', () => process.exit());
+            }
 
             return null;
           }, error => myModule.serverless.cli.log(error));
