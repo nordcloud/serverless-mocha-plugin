@@ -118,7 +118,7 @@ class mochaPlugin {
                 usage: 'Compiler to use on Mocha',
               },
               exitoncomplete: {
-                  usage: 'Force process exit on mocha runner "end" event',
+                usage: 'Force process exit on mocha runner "end" event',
               }
             },
           },
