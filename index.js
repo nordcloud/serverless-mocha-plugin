@@ -117,6 +117,9 @@ class mochaPlugin {
               compilers: {
                 usage: 'Compiler to use on Mocha',
               },
+              exitoncomplete: {
+                usage: 'Force process exit on mocha runner "end" event',
+              },
             },
           },
         },
@@ -292,7 +295,7 @@ class mochaPlugin {
               });
             }
 
-            mocha.run((failures) => {
+            const runner = mocha.run((failures) => {
               process
               .on('exit', () => {
                 myModule.runScripts('postTestCommands').then(() => {
@@ -310,6 +313,10 @@ class mochaPlugin {
                 }
               });
             });
+
+            if (myModule.options.exitoncomplete) {
+              runner.on('end', () => process.exit());
+            }
 
             return null;
           }, error => myModule.serverless.cli.log(error));
