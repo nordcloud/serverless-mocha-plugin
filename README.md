@@ -84,7 +84,7 @@ NOTE: Live running does not currently work. Waiting for serverless 1.0 to finali
 
 ### Running tests
 
-Tests can be run directly using the "invoke test" command. This also initializes the environment variables based on your serverless.yml file and the SERVERLESS_TEST_ROOT variable that defines the root for the code to be tested.
+Tests can be run directly using the "invoke test" command. This also initializes the environment variables based on your serverless.yml file and the SERVERLESS_TEST_ROOT variable that defines the root for the code to be tested. If you're running the tests locally (rather than on live Lambdas, as described below), it will also set the `IS_LOCAL` to `'true'` to match the behavior of [`sls invoke local`](https://serverless.com/framework/docs/providers/aws/cli-reference/invoke-local#environment).
 
 ```
 sls invoke test [--stage stage] [--region region] [-f function1] [-f function2] [...]
