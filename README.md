@@ -199,5 +199,5 @@ rm .offline.pid
 
 ## License
 
-Copyright (c) 2017 [SC5](http://sc5.io/), licensed for users and contributors under MIT license.
-https://github.com/SC5/serverless-mocha-plugin/blob/master/LICENSE
+Copyright (c) 2017 [Nordcloud](https://nordcloud.com/), licensed for users and contributors under MIT license.
+https://github.com/nordcloud/serverless-mocha-plugin/blob/master/LICENSE

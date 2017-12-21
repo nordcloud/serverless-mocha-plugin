@@ -5,16 +5,16 @@
     "node": ">=4.0"
   },
   "description": "Serverless plugin for test driven development using mocha",
-  "author": "Mikael Puittinen (https://sc5.io)",
+  "author": "Mikael Puittinen (https://nordcloud.com)",
   "contributors": [
-    "Anssi Herranen (https://sc5.io)",
+    "Anssi Herranen",
     "Rafał Janicki",
-    "Eetu Tuomala (https://sc5.io)"
+    "Eetu Tuomala"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SC5/serverless-mocha-plugin"
+    "url": "https://github.com/nordcloud/serverless-mocha-plugin"
   },
   "keywords": [
     "serverless framework plugin",
