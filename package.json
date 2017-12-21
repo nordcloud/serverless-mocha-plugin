@@ -45,7 +45,7 @@
     "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.1.1",
     "node-yaml": "^3.0.3",
-    "serverless": "^1.15.1",
+    "serverless": "latest",
     "serverless-webpack": "^1.0.0-rc.4",
     "webpack-node-externals": "^1.5.4"
   },
