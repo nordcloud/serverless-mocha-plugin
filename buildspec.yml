@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Entered the install phase...
+      - npm install
+  build:
+    commands:
+      - echo Run tests...
+      - npm run lint
+      - npm test
