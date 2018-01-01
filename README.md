@@ -1,6 +1,6 @@
 # Serverless Mocha Plugin
 
-[![Build Status](https://travis-ci.org/SC5/serverless-mocha-plugin.svg?branch=master)](https://travis-ci.org/SC5/serverless-mocha-plugin)
+[![Build Status](https://travis-ci.org/nordcloud/serverless-mocha-plugin.svg?branch=master)](https://travis-ci.org/nordcloud/serverless-mocha-plugin)
 
 A Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which
 adds support for test driven development using [mocha](https://mochajs.org/)
