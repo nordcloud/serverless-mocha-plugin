@@ -32,7 +32,7 @@
   "main": "index.js",
   "bin": {},
   "scripts": {
-    "test": "mocha -t 30000",
+    "test": "nyc mocha -t 30000",
     "lint": "eslint ."
   },
   "devDependencies": {
@@ -45,6 +45,7 @@
     "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.1.1",
     "node-yaml": "^3.0.3",
+    "nyc": "^11.4.1",
     "serverless": "latest",
     "serverless-webpack": "^1.0.0-rc.4",
     "webpack-node-externals": "^1.5.4"
