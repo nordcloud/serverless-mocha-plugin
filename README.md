@@ -80,7 +80,7 @@ If you want to run the tests against the real Lambda functions, you can pass the
   wrapper.init(liveFunction);
 ```
 
-NOTE: Live running does not currently work. Waiting for serverless 1.0 to finalize / have required env variables available
+NOTE: Live running does not currently work. Need to finalize / have required env variables available
 
 ### Running tests
 
