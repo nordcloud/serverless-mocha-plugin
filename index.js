@@ -22,6 +22,7 @@ const functionTemplateFile = path.join('templates', 'function-template.ejs');
 const validFunctionRuntimes = [
   'aws-nodejs4.3',
   'aws-nodejs6.10',
+  'aws-nodejs8.10',
 ];
 
 const humanReadableFunctionRuntimes = `${validFunctionRuntimes
@@ -493,12 +494,15 @@ class mochaPlugin {
         }
 
         fse.writeFileSync(serverlessYmlFilePath, ymlEditor.dump());
-
-        if (runtime === 'aws-nodejs4.3' || runtime === 'aws-nodejs6.10') {
+        if (runtime === 'aws-nodejs4.3' ||
+            runtime === 'aws-nodejs6.10' ||
+            runtime === 'aws-nodejs8.10') {
           return this.createAWSNodeJSFuncFile(handler);
         }
 
-        return BbPromise.resolve();
+        throw new this.serverless.classes.Error(`Unknown runtime ${runtime}`);
+
+//        return BbPromise.resolve();
       });
   }
 }
