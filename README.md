@@ -182,6 +182,7 @@ rm .offline.pid
 ```
 ## Release History (1.x)
 
+* 2018/04/03 - v1.8.0 - add support for Node 8
 * 2017/09/10 - v1.7.0 - ability to run scripts before / after tests
 * 2017/09/09 - v1.6.0 - also run tests from subfolders of test
 * 2017/07/11 - v1.4.1 - Add option --root for running tests on e.g. webpack build results residing in other directories,
