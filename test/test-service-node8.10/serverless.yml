@@ -19,10 +19,7 @@ service: mocha-test-suite
 
 provider:
   name: aws
-  runtime: nodejs4.3
-  region: us-east-1
-  environment:
-    TEST_REGION: ${self:provider.region}
+  runtime: nodejs8.10
 
 # you can overwrite defaults here
 #  stage: dev
@@ -57,12 +54,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  dumpEnv:
-    handler: dumpenv.handler
-  helloWorld:
+  hello:
     handler: handler.hello
-  throwException:
-    handler: handler.exception
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

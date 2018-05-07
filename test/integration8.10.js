@@ -11,13 +11,13 @@ const serverless = new Serverless();
 serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
-describe('integration (node v4.3 template)', () => {
+describe('integration (node v8.10 template)', () => {
   before(() => {
     // create temporary directory and copy test service there
     process.env.MOCHA_PLUGIN_TEST_DIR = path.join(__dirname);
     const tmpDir = testUtils.getTmpDirPath();
     fse.mkdirsSync(tmpDir);
-    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node4.3'), tmpDir);
+    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node8.10'), tmpDir);
     process.chdir(tmpDir);
   });
 
@@ -36,10 +36,10 @@ describe('integration (node v4.3 template)', () => {
   });
 
   it('should create test for hello function', () => {
-    const test = execSync(`${serverlessExec} create test --function helloWorld`);
+    const test = execSync(`${serverlessExec} create test --function hello`);
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
-      'serverless-mocha-plugin: created test/helloWorld.js'
+      'serverless-mocha-plugin: created test/hello.js'
     );
   });
 
@@ -57,7 +57,7 @@ describe('integration (node v4.3 template)', () => {
   it('should run tests successfully', () => {
     // change test files to use local proxy version of mocha plugin
     testUtils.replaceTextInFile(
-      path.join('test', 'helloWorld.js'),
+      path.join('test', 'hello.js'),
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
@@ -68,7 +68,6 @@ describe('integration (node v4.3 template)', () => {
     );
 
     const test = execSync(`${serverlessExec} invoke test`);
-
     const result = new Buffer(test, 'base64').toString();
 
     expect(result).to.have.string(
@@ -76,19 +75,11 @@ describe('integration (node v4.3 template)', () => {
     );
 
     expect(result).to.have.string(
-      'helloWorld\n    ✓ implement tests here'
+      'hello\n    ✓ implement tests here'
     );
 
     expect(result).to.have.string(
-      'dumpEnv\n    ✓ Check env'
-    );
-
-    expect(result).to.have.string(
-      'throwException\n    ✓ Get Exception'
-    );
-
-    expect(result).to.have.string(
-      '4 passing'
+      '2 passing'
     );
   });
 });

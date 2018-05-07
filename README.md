@@ -1,6 +1,6 @@
 # Serverless Mocha Plugin
 
-[![Build Status](https://travis-ci.org/SC5/serverless-mocha-plugin.svg?branch=master)](https://travis-ci.org/SC5/serverless-mocha-plugin)
+[![Build Status](https://travis-ci.org/nordcloud/serverless-mocha-plugin.svg?branch=master)](https://travis-ci.org/nordcloud/serverless-mocha-plugin)
 
 A Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which
 adds support for test driven development using [mocha](https://mochajs.org/)
@@ -80,7 +80,7 @@ If you want to run the tests against the real Lambda functions, you can pass the
   wrapper.init(liveFunction);
 ```
 
-NOTE: Live running does not currently work. Waiting for serverless 1.0 to finalize / have required env variables available
+NOTE: Live running does not currently work. Need to finalize / have required env variables available
 
 ### Running tests
 
@@ -182,6 +182,7 @@ rm .offline.pid
 ```
 ## Release History (1.x)
 
+* 2018/04/03 - v1.8.0 - add support for Node 8
 * 2017/09/10 - v1.7.0 - ability to run scripts before / after tests
 * 2017/09/09 - v1.6.0 - also run tests from subfolders of test
 * 2017/07/11 - v1.4.1 - Add option --root for running tests on e.g. webpack build results residing in other directories,
@@ -199,5 +200,5 @@ rm .offline.pid
 
 ## License
 
-Copyright (c) 2017 [SC5](http://sc5.io/), licensed for users and contributors under MIT license.
-https://github.com/SC5/serverless-mocha-plugin/blob/master/LICENSE
+Copyright (c) 2017 [Nordcloud](https://nordcloud.com/), licensed for users and contributors under MIT license.
+https://github.com/nordcloud/serverless-mocha-plugin/blob/master/LICENSE
