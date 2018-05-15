@@ -1,6 +1,6 @@
 {
   "name": "serverless-mocha-plugin",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "engines": {
     "node": ">=4.0"
   },
@@ -57,7 +57,7 @@
     "ejs": "^2.5.2",
     "fs-extra": "^1.0.0",
     "lambda-wrapper": "^0.3.0",
-    "mocha": "^3.1.2",
+    "mocha": "^4.0.0",
     "yaml-edit": "^0.1.3"
   }
 }
