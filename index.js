@@ -118,6 +118,9 @@ class mochaPlugin {
               compilers: {
                 usage: 'Compiler to use on Mocha',
               },
+              exit: {
+                usage: 'force shutdown of the event loop after test run',
+              },
             },
           },
         },
@@ -293,7 +296,7 @@ class mochaPlugin {
               });
             }
 
-            mocha.run((failures) => {
+            const mochaRunner = mocha.run((failures) => {
               process.on('exit', () => {
                 myModule.runScripts('postTestCommands')
                 // exit with non-zero status if there were failures
@@ -308,6 +311,10 @@ class mochaPlugin {
                 utils.setEnv(myModule.serverless);
               }
             });
+
+            if (myModule.options.exit) {
+              mochaRunner.on('end', process.exit);
+            }
 
             return null;
           }, error => myModule.serverless.cli.log(error));
