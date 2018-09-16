@@ -1,6 +1,6 @@
 {
   "name": "serverless-mocha-plugin",
-  "version": "1.8.3",
+  "version": "1.9.0",
   "engines": {
     "node": ">=4.0"
   },
