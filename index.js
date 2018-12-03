@@ -294,6 +294,9 @@ class mochaPlugin {
             // exit with non-zero status if there were failures
               .then(() => process.exit(failures));
           });
+          if (myModule.options.exit) {
+            process.exit(failures);
+          }
         }).on('test', (suite) => {
           const testFuncName = utils.funcNameFromPath(suite.file);
             // set env only for functions
