@@ -182,6 +182,7 @@ rm .offline.pid
 ```
 ## Release History (1.x)
 
+* 2018/12/15 - v1.9.1 - fix to work with serverless 1.33 and later
 * 2018/09/16 - v1.9.0 - add support for --exit option
 * 2018/04/03 - v1.8.0 - add support for Node 8
 * 2017/09/10 - v1.7.0 - ability to run scripts before / after tests
