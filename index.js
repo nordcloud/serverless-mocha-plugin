@@ -156,165 +156,165 @@ class mochaPlugin {
   }
 
   runTests() {
-    const myModule = this;
-    const funcOption = this.options.f || this.options.function || [];
-    const testsPath = this.options.p || this.options.path || utils.getTestsFolder();
-    const testFileMap = {};
-    const mocha = new Mocha({
-      timeout: 6000,
-    });
-
-    const stage = this.options.stage;
-    const region = this.options.region;
-
-    let funcNames = [];
-    if (typeof funcOption === 'string') {
-      funcNames = [funcOption];
-    } else if (funcOption.length > 0) {
-      funcNames = funcOption;
-    }
-    this.serverless.service.load({
-      stage,
-      region,
-    })
-      .then((inited) => {
-        myModule.config = (inited.custom || {})['serverless-mocha-plugin'] || {};
-        // Verify that the service runtime matches with the current runtime
-        let nodeVersion;
-        if (typeof process.versions === 'object') {
-          nodeVersion = process.versions.node;
-        } else {
-          nodeVersion = process.versions;
-        }
-        nodeVersion = nodeVersion.replace(/\.[^.]*$/, '');
-        if (`nodejs${nodeVersion}` !== inited.provider.runtime) {
-          let errorMsg = `Tests being run with nodejs${nodeVersion}, `;
-          errorMsg = `${errorMsg} service is using ${inited.provider.runtime}.`;
-          errorMsg = `${errorMsg} Tests may not be reliable.`;
-
-          this.serverless.cli.log(errorMsg);
-        }
-
-        myModule.serverless.environment = inited.environment;
-        const vars = new myModule.serverless.classes.Variables(myModule.serverless);
-        console.log('Do it');
-        vars.populateService(this.options)
-          .then(() => myModule.runScripts('preTestCommands'))
-          .then(() => myModule.getFunctions(funcNames))
-          .then((funcs) => utils.getTestFiles(funcs, testsPath, funcNames))
-          .then((funcs) => {
-            console.log(funcs);
-            // Run the tests that were actually found
-            funcNames = Object.keys(funcs);
-            if (funcNames.length === 0) {
-              return myModule.serverless.cli.log('No tests to run');
-            }
-
-            funcNames.forEach((func) => {
-              if (funcs[func].mochaPlugin) {
-                if (funcs[func].handler) {
-                    // Map only functions
-                  testFileMap[func] = funcs[func];
-                  utils.setEnv(this.serverless, func);
-                } else {
-                  utils.setEnv(this.serverless);
-                }
-
-                const testPath = funcs[func].mochaPlugin.testPath;
-
-                if (fs.existsSync(testPath)) {
-                  mocha.addFile(testPath);
-                }
-              }
-            });
-
-            const reporter = myModule.options.reporter;
-
-            if (reporter !== undefined) {
-              const reporterOptions = {};
-              if (myModule.options['reporter-options'] !== undefined) {
-                myModule.options['reporter-options'].split(',').forEach((opt) => {
-                  const L = opt.split('=');
-                  if (L.length > 2 || L.length === 0) {
-                    throw new Error(`invalid reporter option "${opt}"`);
-                  } else if (L.length === 2) {
-                    reporterOptions[L[0]] = L[1];
-                  } else {
-                    reporterOptions[L[0]] = true;
-                  }
-                });
-              }
-              mocha.reporter(reporter, reporterOptions);
-            }
-
-            if (myModule.options.grep) {
-              mocha.grep(myModule.options.grep);
-            }
-
-            // set the SERVERLESS_TEST_ROOT variable to define root for tests
-            let rootFolder = this.serverless.config.servicePath;
-
-            if (myModule.options.root) {
-              rootFolder = myModule.options.root;
-              myModule.serverless.cli.log(`Run tests against code under '${rootFolder}'`);
-            }
-
-            // Use full paths to ensure that the code is correctly required in tests
-            if (!path.isAbsolute(rootFolder)) {
-              const currDir = process.cwd();
-              rootFolder = path.join(currDir, rootFolder);
-            }
-
-            /* eslint-disable dot-notation */
-            process.env['SERVERLESS_TEST_ROOT'] = rootFolder;
-
-            if (myModule.options.live) {
-              process.env['SERVERLESS_MOCHA_PLUGIN_LIVE'] = true;
-              process.env['SERVERLESS_MOCHA_PLUGIN_REGION'] = region || inited.provider.region;
-              process.env['SERVERLESS_MOCHA_PLUGIN_SERVICE'] = inited.service;
-              process.env['SERVERLESS_MOCHA_PLUGIN_STAGE'] = stage || inited.provider.stage;
-            }
-            /* eslint-enable dot-notation */
-
-            const compilers = myModule.options.compilers;
-            if (typeof compilers !== 'undefined') {
-              const extensions = ['js'];
-              myModule.options.compilers.split(',').filter(e => e !== '').forEach(c => {
-                const split = c.split(/:(.+)/);
-                const ext = split[0];
-                let mod = split[1];
-
-                if (mod[0] === '.') {
-                  mod = path.join(process.cwd(), mod);
-                }
-                require(mod); // eslint-disable-line global-require
-                extensions.push(ext);
-              });
-            }
-
-            const mochaRunner = mocha.run((failures) => {
-              process.on('exit', () => {
-                myModule.runScripts('postTestCommands')
-                // exit with non-zero status if there were failures
-                  .then(() => process.exit(failures));
-              });
-            }).on('test', (suite) => {
-              const testFuncName = utils.funcNameFromPath(suite.file);
-                // set env only for functions
-              if (testFileMap[testFuncName]) {
-                utils.setEnv(myModule.serverless, testFuncName);
-              } else {
-                utils.setEnv(myModule.serverless);
-              }
-            });
-
-            if (myModule.options.exit) {
-              mochaRunner.on('end', process.exit);
-            }
-
-            return null;
-          }, error => myModule.serverless.cli.log(error));
+    return new Promise((resolve, error) => {
+      const myModule = this;
+      const funcOption = this.options.f || this.options.function || [];
+      const testsPath = this.options.p || this.options.path || utils.getTestsFolder();
+      const testFileMap = {};
+      const mocha = new Mocha({
+        timeout: 6000,
       });
+
+      const stage = this.options.stage;
+      const region = this.options.region;
+
+      let funcNames = [];
+      if (typeof funcOption === 'string') {
+        funcNames = [funcOption];
+      } else if (funcOption.length > 0) {
+        funcNames = funcOption;
+      }
+
+      const inited = this.serverless.service;
+      myModule.config = (inited.custom || {})['serverless-mocha-plugin'] || {};
+      // Verify that the service runtime matches with the current runtime
+      let nodeVersion;
+      if (typeof process.versions === 'object') {
+        nodeVersion = process.versions.node;
+      } else {
+        nodeVersion = process.versions;
+      }
+      nodeVersion = nodeVersion.replace(/\.[^.]*$/, '');
+      if (`nodejs${nodeVersion}` !== inited.provider.runtime) {
+        let errorMsg = `Tests being run with nodejs${nodeVersion}, `;
+        errorMsg = `${errorMsg} service is using ${inited.provider.runtime}.`;
+        errorMsg = `${errorMsg} Tests may not be reliable.`;
+
+        this.serverless.cli.log(errorMsg);
+      }
+
+      myModule.serverless.environment = inited.environment;
+      const vars = new myModule.serverless.classes.Variables(myModule.serverless);
+
+      myModule.runScripts('preTestCommands')
+      .then(() => {
+        const svcFuncs = myModule.getFunctions(funcNames);
+        const funcs = utils.getTestFiles(svcFuncs, testsPath, funcNames);
+
+        // Run the tests that were actually found
+        funcNames = Object.keys(funcs);
+        if (funcNames.length === 0) {
+          return myModule.serverless.cli.log('No tests to run');
+        }
+
+        funcNames.forEach((func) => {
+          if (funcs[func].mochaPlugin) {
+            if (funcs[func].handler) {
+                // Map only functions
+              testFileMap[func] = funcs[func];
+              utils.setEnv(this.serverless, func);
+            } else {
+              utils.setEnv(this.serverless);
+            }
+
+            const testPath = funcs[func].mochaPlugin.testPath;
+
+            if (fs.existsSync(testPath)) {
+              mocha.addFile(testPath);
+            }
+          }
+
+          const reporter = myModule.options.reporter;
+
+          if (reporter !== undefined) {
+            const reporterOptions = {};
+            if (myModule.options['reporter-options'] !== undefined) {
+              myModule.options['reporter-options'].split(',').forEach((opt) => {
+                const L = opt.split('=');
+                if (L.length > 2 || L.length === 0) {
+                  throw new Error(`invalid reporter option "${opt}"`);
+                } else if (L.length === 2) {
+                  reporterOptions[L[0]] = L[1];
+                } else {
+                  reporterOptions[L[0]] = true;
+                }
+              });
+            }
+            mocha.reporter(reporter, reporterOptions);
+          }
+
+          if (myModule.options.grep) {
+            mocha.grep(myModule.options.grep);
+          }
+
+          // set the SERVERLESS_TEST_ROOT variable to define root for tests
+          let rootFolder = this.serverless.config.servicePath;
+
+          if (myModule.options.root) {
+            rootFolder = myModule.options.root;
+            myModule.serverless.cli.log(`Run tests against code under '${rootFolder}'`);
+          }
+
+          // Use full paths to ensure that the code is correctly required in tests
+          if (!path.isAbsolute(rootFolder)) {
+            const currDir = process.cwd();
+            rootFolder = path.join(currDir, rootFolder);
+          }
+
+          /* eslint-disable dot-notation */
+          process.env['SERVERLESS_TEST_ROOT'] = rootFolder;
+
+          if (myModule.options.live) {
+            process.env['SERVERLESS_MOCHA_PLUGIN_LIVE'] = true;
+            process.env['SERVERLESS_MOCHA_PLUGIN_REGION'] = region || inited.provider.region;
+            process.env['SERVERLESS_MOCHA_PLUGIN_SERVICE'] = inited.service;
+            process.env['SERVERLESS_MOCHA_PLUGIN_STAGE'] = stage || inited.provider.stage;
+          }
+          /* eslint-enable dot-notation */
+
+          const compilers = myModule.options.compilers;
+          if (typeof compilers !== 'undefined') {
+            const extensions = ['js'];
+            myModule.options.compilers.split(',').filter(e => e !== '').forEach(c => {
+              const split = c.split(/:(.+)/);
+              const ext = split[0];
+              let mod = split[1];
+
+              if (mod[0] === '.') {
+                mod = path.join(process.cwd(), mod);
+              }
+              require(mod); // eslint-disable-line global-require
+              extensions.push(ext);
+            });
+          }
+
+          const mochaRunner = mocha.run((failures) => {
+            process.on('exit', () => {
+              myModule.runScripts('postTestCommands')
+              // exit with non-zero status if there were failures
+                .then(() => process.exit(failures));
+            });
+          }).on('test', (suite) => {
+            const testFuncName = utils.funcNameFromPath(suite.file);
+              // set env only for functions
+            if (testFileMap[testFuncName]) {
+              utils.setEnv(myModule.serverless, testFuncName);
+            } else {
+              utils.setEnv(myModule.serverless);
+            }
+          }).on('end', () => {
+            resolve();
+            if (myModule.options.exit) {
+              process.exit();
+            }
+          });
+
+
+
+          return null;
+        }, error => myModule.serverless.cli.log(error));
+      });
+    });
   }
 
   createTest() {
@@ -366,28 +366,25 @@ class mochaPlugin {
 
   getFunctions(funcList) {
     const myModule = this;
+    const funcObjs = {};
+    const allFuncs = myModule.serverless.service.functions;
 
-    return new BbPromise((resolve) => {
-      const funcObjs = {};
-      const allFuncs = myModule.serverless.service.functions;
+    if (funcList.length === 0) {
+      return allFuncs;
+    }
 
-      if (funcList.length === 0) {
-        return resolve(allFuncs);
+    let func;
+    funcList.forEach((funcName) => {
+      func = allFuncs[funcName];
+      if (func) {
+        funcObjs[funcName] = func;
+      } else {
+        myModule.serverless.cli.log(`Warning: Could not find function '${funcName}'.`);
       }
-
-      let func;
-      funcList.forEach((funcName) => {
-        func = allFuncs[funcName];
-        if (func) {
-          funcObjs[funcName] = func;
-        } else {
-          myModule.serverless.cli.log(`Warning: Could not find function '${funcName}'.`);
-        }
-      });
-      resolve(funcObjs);
-
-      return null;
     });
+    return (funcObjs);
+
+    return null;
   }
 
   createAWSNodeJSFuncFile(handlerPath) {
