@@ -1,6 +1,6 @@
 {
   "name": "serverless-mocha-plugin",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "engines": {
     "node": ">=4.0"
   },
@@ -46,13 +46,13 @@
     "eslint-plugin-react": "^6.1.1",
     "node-yaml": "^3.0.3",
     "nyc": "^11.4.1",
-    "serverless": "latest",
+    "serverless": "^1.33.2",
     "serverless-webpack": "^1.0.0-rc.4",
     "webpack-node-externals": "^1.5.4"
   },
   "dependencies": {
     "aws-sdk": "^2.6.3",
-    "bluebird": "3.4.6",
+    "bluebird": "^3.4.6",
     "chai": "^3.5.0",
     "delayed-stream": "^1.0.0",
     "ejs": "^2.5.2",

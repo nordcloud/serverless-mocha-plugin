@@ -342,7 +342,7 @@ class mochaPlugin {
       templateFilenamePath = path.join(this.serverless.config.servicePath,
         this.serverless.service.custom['serverless-mocha-plugin'].testTemplate);
     }
-    if ((! templateFilenamePath) || (! fs.existsSync(templateFileNamePath))) {
+    if ((! templateFilenamePath) || (! fs.existsSync(templateFilenamePath))) {
       templateFilenamePath = path.join(__dirname, testTemplateFile);
     }
 
