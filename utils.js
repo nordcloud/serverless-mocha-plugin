@@ -61,21 +61,14 @@ function getTestFiles(funcs, testFolder, funcList) {
 
 // Create the test folder
 function createTestFolder(testsRootFolder) {
-  return new BbPromise((resolve, reject) => {
-    const testsFolder = getTestsFolder(testsRootFolder);
-    fs.exists(testsFolder, (exists) => {
-      if (exists) {
-        return resolve(testsFolder);
-      }
-      fs.mkdir(testsFolder, (err) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(testsFolder);
-      });
-      return null;
-    });
-  });
+  const testsFolder = getTestsFolder(testsRootFolder);
+  const exists = fs.existsSync(testsFolder);
+  if (exists) {
+    return testsFolder;
+  }
+  const create = fs.mkdirSync(testsFolder);
+  
+  return testsFolder;
 }
 
 function getTemplateFromFile(templateFilenamePath) {
