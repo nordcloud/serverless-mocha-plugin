@@ -43,8 +43,8 @@ describe('utils', () => {
   });
 
   it('tests default createTestFolder', () => {
-      const folder = utils.createTestFolder();
-      expect(folder).to.be.equal('test');
+    const folder = utils.createTestFolder();
+    expect(folder).to.be.equal('test');
   });
 
   it('tests custom createTestFolder', () => {

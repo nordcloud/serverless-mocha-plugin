@@ -87,7 +87,7 @@ class mochaPlugin {
           test: {
             usage: 'Invoke test(s)',
             lifecycleEvents: [
-              'invoke'
+              'invoke',
             ],
             options: {
               function: {
@@ -156,7 +156,7 @@ class mochaPlugin {
   }
 
   runTests() {
-    return new Promise((resolve, error) => {
+    return new Promise((resolve) => {
       const myModule = this;
       const funcOption = this.options.f || this.options.function || [];
       const testsPath = this.options.p || this.options.path || utils.getTestsFolder();
@@ -194,7 +194,6 @@ class mochaPlugin {
       }
 
       myModule.serverless.environment = inited.environment;
-      const vars = new myModule.serverless.classes.Variables(myModule.serverless);
 
       myModule.runScripts('preTestCommands')
       .then(() => {
@@ -288,7 +287,7 @@ class mochaPlugin {
             });
           }
 
-          const mochaRunner = mocha.run((failures) => {
+          mocha.run((failures) => {
             process.on('exit', () => {
               myModule.runScripts('postTestCommands')
               // exit with non-zero status if there were failures
@@ -308,11 +307,9 @@ class mochaPlugin {
               process.exit();
             }
           });
-
-
-
           return null;
         }, error => myModule.serverless.cli.log(error));
+        return null;
       });
     });
   }
@@ -342,7 +339,7 @@ class mochaPlugin {
       templateFilenamePath = path.join(this.serverless.config.servicePath,
         this.serverless.service.custom['serverless-mocha-plugin'].testTemplate);
     }
-    if ((! templateFilenamePath) || (! fs.existsSync(templateFilenamePath))) {
+    if ((!templateFilenamePath) || (!fs.existsSync(templateFilenamePath))) {
       templateFilenamePath = path.join(__dirname, testTemplateFile);
     }
 
@@ -383,8 +380,6 @@ class mochaPlugin {
       }
     });
     return (funcObjs);
-
-    return null;
   }
 
   createAWSNodeJSFuncFile(handlerPath) {
@@ -415,16 +410,16 @@ class mochaPlugin {
       ].join('');
       throw new this.serverless.classes.Error(errorMessage);
     }
-    if(fs.writeFileSync(path.join(handlerDir, handlerFile), jsFile)) {
-      myModule.serverless.cli.log(`Creating file ${handlerFile} failed`);
-      return new Error(`Creating file ${handlerFile} failed`); 
+    if (fs.writeFileSync(path.join(handlerDir, handlerFile), jsFile)) {
+      this.serverless.cli.log(`Creating file ${handlerFile} failed`);
+      return new Error(`Creating file ${handlerFile} failed`);
     }
     this.serverless.cli.log(`Created function file "${path.join(handlerDir, handlerFile)}"`);
     return BbPromise.resolve();
   }
 
   createFunctionTest() {
-    const plugin=this;
+    const plugin = this;
     return plugin.createFunction()
     .then(plugin.createTest);
   }

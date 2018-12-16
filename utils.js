@@ -1,6 +1,5 @@
 'use strict';
 
-const BbPromise = require('bluebird');
 const path = require('path');
 const fs = require('fs');
 
@@ -37,7 +36,7 @@ function traverseTestFolder(testFolder, prefix) {
 // getTestFiles. Returns all test files, attaches to functions
 function getTestFiles(funcs, testFolder, funcList) {
   const funcFiles = traverseTestFolder(testFolder);
-  let resFuncs = {};
+  const resFuncs = {};
   if (funcFiles.length > 0) {
     funcFiles.forEach((val) => {
       if (path.extname(val) === '.js') {
@@ -52,7 +51,7 @@ function getTestFiles(funcs, testFolder, funcList) {
         }
       }
     });
-  } 
+  }
   return resFuncs;
 }
 
@@ -63,8 +62,7 @@ function createTestFolder(testsRootFolder) {
   if (exists) {
     return testsFolder;
   }
-  const create = fs.mkdirSync(testsFolder);
-  
+  fs.mkdirSync(testsFolder);
   return testsFolder;
 }
 
