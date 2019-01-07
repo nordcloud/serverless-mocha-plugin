@@ -286,29 +286,28 @@ class mochaPlugin {
               extensions.push(ext);
             });
           }
-
-          mocha.run((failures) => {
-            process.on('exit', () => {
-              myModule.runScripts('postTestCommands')
-              // exit with non-zero status if there were failures
-                .then(() => process.exit(failures));
-            });
-          }).on('test', (suite) => {
-            const testFuncName = utils.funcNameFromPath(suite.file);
-              // set env only for functions
-            if (testFileMap[testFuncName]) {
-              utils.setEnv(myModule.serverless, testFuncName);
-            } else {
-              utils.setEnv(myModule.serverless);
-            }
-          }).on('end', () => {
-            resolve();
-            if (myModule.options.exit) {
-              process.exit();
-            }
-          });
           return null;
         }, error => myModule.serverless.cli.log(error));
+        mocha.run((failures) => {
+          process.on('exit', () => {
+            myModule.runScripts('postTestCommands')
+            // exit with non-zero status if there were failures
+              .then(() => process.exit(failures));
+          });
+        }).on('test', (suite) => {
+          const testFuncName = utils.funcNameFromPath(suite.file);
+            // set env only for functions
+          if (testFileMap[testFuncName]) {
+            utils.setEnv(myModule.serverless, testFuncName);
+          } else {
+            utils.setEnv(myModule.serverless);
+          }
+        }).on('end', () => {
+          resolve();
+          if (myModule.options.exit) {
+            process.exit();
+          }
+        });
         return null;
       });
     });
