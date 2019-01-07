@@ -289,11 +289,9 @@ class mochaPlugin {
           return null;
         }, error => myModule.serverless.cli.log(error));
         mocha.run((failures) => {
-          process.on('exit', () => {
-            myModule.runScripts('postTestCommands')
-            // exit with non-zero status if there were failures
-              .then(() => process.exit(failures));
-          });
+          myModule.runScripts('postTestCommands')
+          // exit with non-zero status if there were failures
+            .then(() => process.exit(failures));
         }).on('test', (suite) => {
           const testFuncName = utils.funcNameFromPath(suite.file);
             // set env only for functions
@@ -302,10 +300,9 @@ class mochaPlugin {
           } else {
             utils.setEnv(myModule.serverless);
           }
-        }).on('end', () => {
-          resolve();
+        }).on('fail', () => {
           if (myModule.options.exit) {
-            process.exit();
+            process.exit(1);
           }
         });
         return null;
