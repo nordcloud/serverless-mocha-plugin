@@ -282,7 +282,14 @@ class mochaPlugin {
               if (mod[0] === '.') {
                 mod = path.join(process.cwd(), mod);
               }
-              require(mod); // eslint-disable-line global-require
+
+              const babelModules = ['babel-register', '@babel/register'];
+              const babelConf = ((this.serverless.service.custom || {})['serverless-mocha-plugin'] || {}).babelOptions; // eslint-disable-line max-len
+              if (babelModules.includes(mod) && babelConf) {
+                require(mod)(babelConf); // eslint-disable-line global-require
+              } else {
+                require(mod); // eslint-disable-line global-require
+              }
               extensions.push(ext);
             });
           }
