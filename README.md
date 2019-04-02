@@ -87,7 +87,7 @@ NOTE: Live running does not currently work. Need to finalize / have required env
 Tests can be run directly using the "invoke test" command. This also initializes the environment variables based on your serverless.yml file and the SERVERLESS_TEST_ROOT variable that defines the root for the code to be tested.
 
 ```
-sls invoke test [--stage stage] [--region region] [-f function1] [-f function2] [...]
+sls invoke test [--stage stage] [--region region] [-t timeout] [-f function1] [-f function2] [...]
 ```
 
 To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be passed with the -O switch.
@@ -196,6 +196,8 @@ custom:
 ```
 ## Release History (1.x)
 
+* 2019/04/02 - v1.10.0 - add timeout parameter
+                         add babel options
 * 2018/12/15 - v1.9.1 - fix to work with serverless 1.33 and later
 * 2018/09/16 - v1.9.0 - add support for --exit option
 * 2018/04/03 - v1.8.0 - add support for Node 8
