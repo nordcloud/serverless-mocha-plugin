@@ -180,6 +180,20 @@ Sample stopOffline.sh
 kill `cat .offline.pid`
 rm .offline.pid
 ```
+
+### Usage with [babel register](https://babeljs.io/docs/en/babel-register)
+
+If you use mocha with [babel compiler](https://github.com/mochajs/mocha/wiki/compilers-deprecation) e.g. `sls invoke test --compilers js:@babel/register` \
+Babel configuration can be determined with the custom `babelOptions` configuration in serverless.yml
+
+```
+custom:
+  serverless-mocha-plugin:
+    babelOptions:
+      presets: [["@babel/env", { "targets": { "node": "8.10" }, "shippedProposals": true, "useBuiltIns": "usage" }]]
+      plugins:
+        - ["@babel/plugin-transform-runtime"]
+```
 ## Release History (1.x)
 
 * 2018/12/15 - v1.9.1 - fix to work with serverless 1.33 and later
