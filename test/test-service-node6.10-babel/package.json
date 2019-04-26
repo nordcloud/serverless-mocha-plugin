@@ -1,0 +1,22 @@
+{
+  "name": "test-service-node6.10-babel",
+  "version": "0.0.1",
+  "description": "test-service-node6.10-babel",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nordcloud/serverless-mocha-plugin"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1"
+  },
+  "babel": {
+    "presets": [
+        ["env", {
+          "targets": {
+            "node": "current"
+          }
+        }]
+      ]
+    }
+}

@@ -11,13 +11,13 @@ const serverless = new Serverless();
 serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
-describe('integration', () => {
+describe('integration (node v8.10 template)', () => {
   before(() => {
     // create temporary directory and copy test service there
     process.env.MOCHA_PLUGIN_TEST_DIR = path.join(__dirname);
     const tmpDir = testUtils.getTmpDirPath();
     fse.mkdirsSync(tmpDir);
-    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service'), tmpDir);
+    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node8.10'), tmpDir);
     process.chdir(tmpDir);
   });
 
@@ -45,7 +45,8 @@ describe('integration', () => {
 
   it('should create function goodbye', () => {
     const test = execSync(
-      `${serverlessExec} create function --function goodbye --handler goodbye/index.handler`
+      `${serverlessExec}` +
+      ' create function --function goodbye --handler goodbye/index.handler'
     );
     const result = new Buffer(test, 'base64').toString();
     expect(result).to.have.string(
@@ -65,8 +66,10 @@ describe('integration', () => {
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
-    const test = execSync(`${serverlessExec} invoke test --stage dev --region us-east-1`);
+
+    const test = execSync(`${serverlessExec} invoke test`);
     const result = new Buffer(test, 'base64').toString();
+
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
     );

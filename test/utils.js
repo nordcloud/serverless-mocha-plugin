@@ -42,23 +42,15 @@ describe('utils', () => {
     expect(template).to.be.equal(expectedTemplate);
   });
 
-  it('tests default createTestFolder', () =>
-    utils.createTestFolder().then((folder) => {
-      expect(folder).to.be.equal('test');
-    })
-  );
+  it('tests default createTestFolder', () => {
+    const folder = utils.createTestFolder();
+    expect(folder).to.be.equal('test');
+  });
 
-  it('tests default createTestFolder (exists)', () =>
-    utils.createTestFolder().then((folder) => {
-      expect(folder).to.be.equal('test');
-    })
-  );
-
-  it('tests custom createTestFolder', () =>
-    utils.createTestFolder('custom').then((folder) => {
-      expect(folder).to.be.equal('custom');
-    })
-  );
+  it('tests custom createTestFolder', () => {
+    const folder = utils.createTestFolder('custom');
+    expect(folder).to.be.equal('custom');
+  });
 
   it('tests funcNameFromPath', () => {
     const functionName = utils.funcNameFromPath('path/to/functionName.js');

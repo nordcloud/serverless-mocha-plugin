@@ -23,8 +23,9 @@ describe('mochaPlugin', () => {
     const hooks = Object.keys(mochaPlugin.hooks);
     expect(hooks).to.eql([
       'create:test:test',
-      'invoke:test:test',
-      'create:function:create',
+      'invoke:test:invoke',
+      'create:function:function',
+      'create:function:test',
     ]);
   });
 });

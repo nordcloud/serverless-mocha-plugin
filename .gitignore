@@ -35,4 +35,10 @@ node_modules
 # IDE
 .idea
 
+# NYC
+.nyc_output
+
+# Mac
+.DS_Store
+
 tmp

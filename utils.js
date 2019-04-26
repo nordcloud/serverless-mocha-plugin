@@ -1,6 +1,5 @@
 'use strict';
 
-const BbPromise = require('bluebird');
 const path = require('path');
 const fs = require('fs');
 
@@ -14,40 +13,57 @@ function getTestFilePath(funcName, testsRootFolder) {
   return path.join(getTestsFolder(testsRootFolder), `${funcName.replace(/.*\//g, '')}.js`);
 }
 
-// getTestFiles. If no functions provided, returns all files
-function getTestFiles(funcs) {
-  return new BbPromise((resolve) => {
-    const funcNames = Object.keys(funcs);
-    const resFuncs = funcs;
-    if (funcNames && funcNames.length > 0) {
-      funcNames.forEach((val) => {
-        resFuncs[val].mochaPlugin = {
-          testPath: getTestFilePath(val),
-        };
+function traverseTestFolder(testFolder, prefix) {
+  const funcFiles = [];
+  const dirContents = fs.readdirSync(testFolder);
+
+  dirContents.forEach((val) => {
+    const stats = fs.statSync(path.join(testFolder, val));
+    if (stats.isFile()) {
+      funcFiles.push(prefix ? path.join(prefix, val) : val);
+    } else {
+      const subContents = traverseTestFolder(
+        path.join(testFolder, val), prefix ? path.join(prefix, val) : val
+      );
+      subContents.forEach((subval) => {
+        funcFiles.push(subval);
       });
-      return resolve(resFuncs);
     }
-    return resolve({});
   });
+  return funcFiles;
+}
+
+// getTestFiles. Returns all test files, attaches to functions
+function getTestFiles(funcs, testFolder, funcList) {
+  const funcFiles = traverseTestFolder(testFolder);
+  const resFuncs = {};
+  if (funcFiles.length > 0) {
+    funcFiles.forEach((val) => {
+      if (path.extname(val) === '.js') {
+        const base = path.basename(val).replace(/.js$/, '');
+        // Create test for non-functions only if no funcList
+        if (funcs[base] || funcList.length === 0) {
+          resFuncs[base] = funcs[base] || { };
+
+          resFuncs[base].mochaPlugin = {
+            testPath: path.join(getTestsFolder(testFolder), val),
+          };
+        }
+      }
+    });
+  }
+  return resFuncs;
 }
 
 // Create the test folder
 function createTestFolder(testsRootFolder) {
-  return new BbPromise((resolve, reject) => {
-    const testsFolder = getTestsFolder(testsRootFolder);
-    fs.exists(testsFolder, (exists) => {
-      if (exists) {
-        return resolve(testsFolder);
-      }
-      fs.mkdir(testsFolder, (err) => {
-        if (err) {
-          return reject(err);
-        }
-        return resolve(testsFolder);
-      });
-      return null;
-    });
-  });
+  const testsFolder = getTestsFolder(testsRootFolder);
+  const exists = fs.existsSync(testsFolder);
+  if (exists) {
+    return testsFolder;
+  }
+  fs.mkdirSync(testsFolder);
+  return testsFolder;
 }
 
 function getTemplateFromFile(templateFilenamePath) {
@@ -62,10 +78,10 @@ function funcNameFromPath(filePath) {
 
 function setEnv(serverless, funcName) {
   const serviceVars = serverless.service.provider.environment || {};
-  const functionVars =
-    serverless.service.functions[funcName] ?
-      serverless.service.functions[funcName].environment :
-      {};
+  let functionVars = {};
+  if (funcName && serverless.service.functions[funcName]) {
+    functionVars = serverless.service.functions[funcName].environment || {};
+  }
   return Object.assign(
     process.env,
     serviceVars,
