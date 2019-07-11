@@ -1,22 +1,11 @@
 const path = require('path');
+const slsw = require('serverless-webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
-const yaml = require('node-yaml');
 const nodeExternals = require('webpack-node-externals');
 
-function getFunctions() {
-  const serverlessYml = yaml.readSync('serverless.yml');
-  const webPackFunctions = {};
-  const functionNames = Object.keys(serverlessYml.functions || {});
-  functionNames.forEach((name) => {
-    const handlerFile = serverlessYml.functions[name].handler.replace(/.[^.]*$/, '');
-    webPackFunctions[handlerFile] = [`./${handlerFile}.js`];
-  });
-  return webPackFunctions;
-}
 
 module.exports = {
-  entry: getFunctions(),
+  entry: slsw.lib.entries,
   target: 'node',
   mode: process.env.NODE_ENV,
   module: {

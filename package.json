@@ -2,7 +2,7 @@
   "name": "serverless-mocha-plugin",
   "version": "1.10.0",
   "engines": {
-    "node": ">=6.10"
+    "node": ">=8.10"
   },
   "description": "Serverless plugin for test driven development using mocha",
   "author": "Mikael Puittinen (https://nordcloud.com)",
@@ -44,7 +44,6 @@
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.2",
-    "node-yaml": "^4.0.1",
     "nyc": "^14.1.1",
     "serverless": "^1.47.0",
     "serverless-webpack": "^5.3.1",

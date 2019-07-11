@@ -19,7 +19,7 @@ service: mocha-test-suite
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs10.x
 
 # you can overwrite defaults here
 #  stage: dev
@@ -87,3 +87,8 @@ functions:
 
 plugins:
   - serverless-mocha-plugin
+
+custom:
+  serverless-mocha-plugin:
+    testTemplate: templates/test-template.js
+    functionTemplate: templates/function-template.ejs

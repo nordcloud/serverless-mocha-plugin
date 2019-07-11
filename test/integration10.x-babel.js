@@ -11,7 +11,7 @@ const serverless = new Serverless();
 serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
-describe('integration (node v6.10 template with babel)', () => {
+describe('integration (node v10.x template with babel)', () => {
   before(function () {
     // increase timeout because of the npm install, with node 4 and npm 2 it's taking some time
     this.timeout(120000);
@@ -20,7 +20,7 @@ describe('integration (node v6.10 template with babel)', () => {
     const tmpDir = testUtils.getTmpDirPath();
     fse.mkdirsSync(tmpDir);
     fse.copySync(
-      path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node6.10-babel'),
+      path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node10.x-babel'),
       tmpDir,
     );
     process.chdir(tmpDir);
