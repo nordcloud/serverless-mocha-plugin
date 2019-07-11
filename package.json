@@ -2,7 +2,7 @@
   "name": "serverless-mocha-plugin",
   "version": "1.10.0",
   "engines": {
-    "node": ">=4.0"
+    "node": ">=6.10"
   },
   "description": "Serverless plugin for test driven development using mocha",
   "author": "Mikael Puittinen (https://nordcloud.com)",
@@ -36,29 +36,30 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "babel-register": "6.24.0",
-    "copy-webpack-plugin": "^3.0.1",
-    "eslint": "^3.3.1",
-    "eslint-config-airbnb": "^10.0.1",
-    "eslint-config-airbnb-base": "^5.0.2",
-    "eslint-plugin-import": "^1.13.0",
-    "eslint-plugin-jsx-a11y": "^2.1.0",
-    "eslint-plugin-react": "^6.1.1",
-    "node-yaml": "^3.0.3",
-    "nyc": "^11.4.1",
-    "serverless": "^1.33.2",
-    "serverless-webpack": "^1.0.0-rc.4",
-    "webpack-node-externals": "^1.5.4"
+    "babel-register": "6.26.0",
+    "copy-webpack-plugin": "^5.0.3",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.1",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.2",
+    "node-yaml": "^4.0.1",
+    "nyc": "^14.1.1",
+    "serverless": "^1.47.0",
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.35.3",
+    "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
-    "aws-sdk": "^2.6.3",
-    "bluebird": "^3.4.6",
-    "chai": "^3.5.0",
+    "aws-sdk": "^2.491.0",
+    "bluebird": "^3.5.5",
+    "chai": "^4.2.0",
     "delayed-stream": "^1.0.0",
-    "ejs": "^2.5.2",
-    "fs-extra": "^1.0.0",
+    "ejs": "^2.6.2",
+    "fs-extra": "^8.1.0",
     "lambda-wrapper": "^0.3.0",
-    "mocha": "^4.0.0",
+    "mocha": "^6.1.4",
     "yaml-edit": "^0.1.3"
   }
 }

@@ -1,10 +1,10 @@
 'use strict';
 
 const Serverless = require('serverless');
-const execSync = require('child_process').execSync;
+const { execSync } = require('child_process');
 const path = require('path');
 const fse = require('fs-extra');
-const expect = require('chai').expect;
+const { expect } = require('chai');
 const testUtils = require('./testUtils');
 
 const serverless = new Serverless();
@@ -23,34 +23,34 @@ describe('integration (node v6.10 template)', () => {
 
   it('should contain test params in cli info', () => {
     const test = execSync(`${serverlessExec}`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = test.toString();
     expect(result).to.have.string(
-      'create test ................... Create mocha tests for service / function'
+      'create test ................... Create mocha tests for service / function',
     );
     expect(result).to.have.string(
-      'create function ............... Create a function into the service'
+      'create function ............... Create a function into the service',
     );
     expect(result).to.have.string(
-      'invoke test ................... Invoke test(s)'
+      'invoke test ................... Invoke test(s)',
     );
   });
 
   it('should create test for hello function', () => {
     const test = execSync(`${serverlessExec} create test --function hello`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = test.toString();
     expect(result).to.have.string(
-      'serverless-mocha-plugin: created test/hello.js'
+      'serverless-mocha-plugin: created test/hello.js',
     );
   });
 
   it('should create function goodbye', () => {
     const test = execSync(
-      `${serverlessExec}` +
-      ' create function --function goodbye --handler goodbye/index.handler'
+      `${serverlessExec}`
+      + ' create function --function goodbye --handler goodbye/index.handler',
     );
-    const result = new Buffer(test, 'base64').toString();
+    const result = test.toString();
     expect(result).to.have.string(
-      'serverless-mocha-plugin: created test/goodbye.js'
+      'serverless-mocha-plugin: created test/goodbye.js',
     );
   });
 
@@ -59,25 +59,25 @@ describe('integration (node v6.10 template)', () => {
     testUtils.replaceTextInFile(
       path.join('test', 'hello.js'),
       'require(\'serverless-mocha-plugin\')',
-      'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
+      'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')',
     );
     testUtils.replaceTextInFile(
       path.join('test', 'goodbye.js'),
       'require(\'serverless-mocha-plugin\')',
-      'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
+      'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')',
     );
     const test = execSync(`${serverlessExec} invoke test`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = test.toString();
     expect(result).to.have.string(
-      'goodbye\n    ✓ implement tests here'
+      'goodbye\n    ✓ implement tests here',
     );
 
     expect(result).to.have.string(
-      'hello\n    ✓ implement tests here'
+      'hello\n    ✓ implement tests here',
     );
 
     expect(result).to.have.string(
-      '2 passing'
+      '2 passing',
     );
   });
 });

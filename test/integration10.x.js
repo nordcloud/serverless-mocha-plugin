@@ -11,20 +11,14 @@ const serverless = new Serverless();
 serverless.init();
 const serverlessExec = path.join(serverless.config.serverlessPath, '..', 'bin', 'serverless');
 
-describe('integration (node v6.10 template with babel)', () => {
-  before(function () {
-    // increase timeout because of the npm install, with node 4 and npm 2 it's taking some time
-    this.timeout(120000);
+describe('integration (node v10.x template)', () => {
+  before(() => {
     // create temporary directory and copy test service there
     process.env.MOCHA_PLUGIN_TEST_DIR = path.join(__dirname);
     const tmpDir = testUtils.getTmpDirPath();
     fse.mkdirsSync(tmpDir);
-    fse.copySync(
-      path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node6.10-babel'),
-      tmpDir,
-    );
+    fse.copySync(path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node10.x'), tmpDir);
     process.chdir(tmpDir);
-    execSync('npm install -s');
   });
 
   it('should contain test params in cli info', () => {
@@ -50,10 +44,7 @@ describe('integration (node v6.10 template with babel)', () => {
   });
 
   it('should create function goodbye', () => {
-    const test = execSync(
-      `${serverlessExec}`
-      + ' create function --function goodbye --handler goodbye/index.handler',
-    );
+    const test = execSync(`${serverlessExec} create function --function goodbye --handler goodbye/index.handler`);
     const result = test.toString();
     expect(result).to.have.string(
       'serverless-mocha-plugin: created test/goodbye.js',
@@ -63,17 +54,19 @@ describe('integration (node v6.10 template with babel)', () => {
   it('should run tests successfully', () => {
     // change test files to use local proxy version of mocha plugin
     testUtils.replaceTextInFile(
-      path.join('test', 'hello.js'),
+      path.join(process.cwd(), 'test', 'hello.js'),
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')',
     );
     testUtils.replaceTextInFile(
-      path.join('test', 'goodbye.js'),
+      path.join(process.cwd(), 'test', 'goodbye.js'),
       'require(\'serverless-mocha-plugin\')',
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')',
     );
-    const test = execSync(`${serverlessExec} invoke test --compilers js:babel-register`);
+
+    const test = execSync(`${serverlessExec} invoke test`);
     const result = test.toString();
+
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here',
     );

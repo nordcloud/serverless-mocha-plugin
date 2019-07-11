@@ -18,8 +18,9 @@ function getFunctions() {
 module.exports = {
   entry: getFunctions(),
   target: 'node',
+  mode: process.env.NODE_ENV,
   module: {
-    loaders: [
+    rules: [
       { test: /\.json/, loader: 'json-loader' },
     ],
   },
