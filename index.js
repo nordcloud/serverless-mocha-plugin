@@ -22,7 +22,6 @@ const functionTemplateFile = path.join('templates', 'function-template.ejs');
 
 const validFunctionRuntimes = [
   'aws-nodejs4.3',
-  'aws-nodejs6.10',
   'aws-nodejs8.10',
   'aws-nodejs10.x',
 ];
