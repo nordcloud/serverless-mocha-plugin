@@ -23,7 +23,7 @@ describe('integration (node v10.x template)', () => {
 
   it('should contain test params in cli info', () => {
     const test = execSync(`${serverlessExec}`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'create test ................... Create mocha tests for service / function'
     );
@@ -37,7 +37,7 @@ describe('integration (node v10.x template)', () => {
 
   it('should create test for hello function', () => {
     const test = execSync(`${serverlessExec} create test --function hello`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'serverless-mocha-plugin: created test/hello.js'
     );
@@ -48,7 +48,7 @@ describe('integration (node v10.x template)', () => {
       `${serverlessExec}` +
       ' create function --function goodbye --handler goodbye/index.handler'
     );
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'serverless-mocha-plugin: created test/goodbye.js'
     );
@@ -67,7 +67,7 @@ describe('integration (node v10.x template)', () => {
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
     const test = execSync(`${serverlessExec} invoke test`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
     );

@@ -24,7 +24,7 @@ describe('integration with options in stage prod', () => {
 
   it('should contain test params in cli info', () => {
     const test = execSync(`${serverlessExec}`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'create test ................... Create mocha tests for service / function'
     );
@@ -38,7 +38,7 @@ describe('integration with options in stage prod', () => {
 
   it('should create test for hello function', () => {
     const test = execSync(`${serverlessExec} create test --function hello --stage prod`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'serverless-mocha-plugin: created test/hello.js'
     );
@@ -50,7 +50,7 @@ describe('integration with options in stage prod', () => {
       ' create function --function goodbye --handler goodbye/index.handler ' +
       '--httpEvent "post event" --httpEvent "get event" --stage prod'
     );
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'Add http event \'post event\''
     );
@@ -75,7 +75,7 @@ describe('integration with options in stage prod', () => {
       'require(\'../.serverless_plugins/serverless-mocha-plugin/index.js\')'
     );
     const test = execSync(`${serverlessExec} invoke test --stage prod`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
     );
@@ -95,7 +95,7 @@ describe('integration with options in stage prod', () => {
     execSync(`${serverlessExec} webpack -o testBuild --stage prod`);
 
     const test = execSync(`${serverlessExec} invoke test --stage prod --root testBuild`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
 
     expect(result).to.have.string(
       'Run tests against code under \'testBuild\''
@@ -115,7 +115,7 @@ describe('integration with options in stage prod', () => {
 
   it('should limit tests to run with --grep option', () => {
     const test = execSync(`${serverlessExec} invoke test --grep goodbye --stage prod`);
-    const result = new Buffer(test, 'base64').toString();
+    const result = new Buffer.from(test, 'base64').toString();
     expect(result).to.have.string(
       'goodbye\n    ✓ implement tests here'
     );

@@ -150,7 +150,7 @@ class mochaPlugin {
         this.serverless.cli.log(`Run command: ${cmd}`);
         const cmdOut = execSync(cmd);
         if (process.env.SLS_DEBUG) {
-          const output = new Buffer(cmdOut, 'base64').toString();
+          const output = new Buffer.from(cmdOut, 'base64').toString();
           this.serverless.cli.log(output);
         }
       });
