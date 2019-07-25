@@ -23,7 +23,7 @@ function traverseTestFolder(testFolder, prefix) {
       funcFiles.push(prefix ? path.join(prefix, val) : val);
     } else {
       const subContents = traverseTestFolder(
-        path.join(testFolder, val), prefix ? path.join(prefix, val) : val
+        path.join(testFolder, val), prefix ? path.join(prefix, val) : val,
       );
       subContents.forEach((subval) => {
         funcFiles.push(subval);
@@ -85,7 +85,7 @@ function setEnv(serverless, funcName) {
   return Object.assign(
     process.env,
     serviceVars,
-    functionVars
+    functionVars,
   );
 }
 

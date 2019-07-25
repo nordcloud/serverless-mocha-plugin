@@ -89,4 +89,3 @@ functions:
 
 plugins:
   - serverless-mocha-plugin
-  - serverless-webpack

@@ -6,15 +6,19 @@
     "type": "git",
     "url": "https://github.com/nordcloud/serverless-mocha-plugin"
   },
+  "scripts": {
+    "preinstall": "npm config set package-lock false",
+    "postinstall": "npm config set package-lock true"
+  },
   "license": "MIT",
   "devDependencies": {
-    "babel-preset-env": "^1.6.1"
+    "babel-preset-env": "^1.7.0"
   },
   "babel": {
     "presets": [
         ["env", {
           "targets": {
-            "node": "current"
+            "node": "6.10"
           }
         }]
       ]

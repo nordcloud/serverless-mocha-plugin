@@ -1,7 +1,14 @@
 language: node_js
-node_js:
-- '10.15.0'
-- '8.10.0'
+matrix:
+  include:
+    - name: "Node v8"
+      os: linux
+      node_js: '8'
+      env: TEST_SIUTE=8.10
+    - name: "Node v10"
+      os: linux
+      node_js: '10'
+      env: TEST_SIUTE=10.x
 script:
 - npm run lint
-- npm test
+- npx nyc mocha -t 30000 ./test/*$TEST_SIUTE*.js
