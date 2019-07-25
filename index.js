@@ -181,6 +181,10 @@ class mochaPlugin {
       const inited = this.serverless.service;
       myModule.config = (inited.custom || {})['serverless-mocha-plugin'] || {};
       // Verify that the service runtime matches with the current runtime
+      let runtime = inited.provider.runtime;
+      // Fix the real version for node10
+      runtime = runtime.replace('\.x', '');
+
       let nodeVersion;
       if (typeof process.versions === 'object') {
         nodeVersion = process.versions.node;
@@ -188,9 +192,9 @@ class mochaPlugin {
         nodeVersion = process.versions;
       }
       nodeVersion = nodeVersion.replace(/\.[^.]*$/, '');
-      if (`nodejs${nodeVersion}` !== inited.provider.runtime) {
+      if (! `nodejs${nodeVersion}`.startsWith(runtime)) {
         let errorMsg = `Tests being run with nodejs${nodeVersion}, `;
-        errorMsg = `${errorMsg} service is using ${inited.provider.runtime}.`;
+        errorMsg = `${errorMsg} service is using ${runtime}.`;
         errorMsg = `${errorMsg} Tests may not be reliable.`;
 
         this.serverless.cli.log(errorMsg);
