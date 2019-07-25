@@ -21,9 +21,8 @@ const testTemplateFile = path.join('templates', 'test-template.ejs');
 const functionTemplateFile = path.join('templates', 'function-template.ejs');
 
 const validFunctionRuntimes = [
-  'aws-nodejs4.3',
-  'aws-nodejs6.10',
   'aws-nodejs8.10',
+  'aws-nodejs10.x',
 ];
 
 const humanReadableFunctionRuntimes = `${validFunctionRuntimes
@@ -503,8 +502,7 @@ class mochaPlugin {
         }
 
         fse.writeFileSync(serverlessYmlFilePath, ymlEditor.dump());
-        if (runtime === 'aws-nodejs4.3' ||
-            runtime === 'aws-nodejs6.10' ||
+        if (runtime === 'aws-nodejs10.x' ||
             runtime === 'aws-nodejs8.10') {
           return this.createAWSNodeJSFuncFile(handler);
         }
