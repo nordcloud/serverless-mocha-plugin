@@ -23,6 +23,8 @@ describe('integration (node v10.x template with babel)', () => {
       path.join(process.env.MOCHA_PLUGIN_TEST_DIR, 'test-service-node10.x-babel'),
       tmpDir);
     process.chdir(tmpDir);
+    console.log(`cd ${tmpDir}`);
+    console.log(`MOCHA_PLUGIN_TEST_DIR=${process.env.MOCHA_PLUGIN_TEST_DIR}`);
     execSync('npm install');
   });
 

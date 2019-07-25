@@ -1,7 +1,7 @@
 {
-  "name": "test-service-node6.10-babel",
+  "name": "test-service-node10.x-babel",
   "version": "0.0.1",
-  "description": "test-service-node6.10-babel",
+  "description": "test-service-node10.x-babel",
   "repository": {
     "type": "git",
     "url": "https://github.com/nordcloud/serverless-mocha-plugin"
