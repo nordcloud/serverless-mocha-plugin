@@ -109,7 +109,7 @@ To run tests live against the actual deployed Lambdas, use the '--live' or '-l' 
 To run tests e.g. against built artefacts that reside in some other directory, use the '--root' or '-r' switch. e.g.
 ```
   sls webpack -o testBuild
-  sls invoke test -r testBuild
+  sls invoke test --root testBuild
   rm -rf testBuild
 ```
 
@@ -196,6 +196,8 @@ custom:
 ```
 ## Release History (1.x)
 
+* 2019/07/25 - v1.11.0 - support for node10
+                         deprecated node6
 * 2019/04/02 - v1.10.0 - add timeout parameter
                          add babel options
 * 2018/12/15 - v1.9.1 - fix to work with serverless 1.33 and later
