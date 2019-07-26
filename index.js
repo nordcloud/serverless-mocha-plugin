@@ -283,6 +283,9 @@ class mochaPlugin {
               process.env['SERVERLESS_MOCHA_PLUGIN_REGION'] = region || inited.provider.region;
               process.env['SERVERLESS_MOCHA_PLUGIN_SERVICE'] = inited.service;
               process.env['SERVERLESS_MOCHA_PLUGIN_STAGE'] = stage || inited.provider.stage;
+            } else {
+              // Set the `IS_LOCAL` env variable to match the `sls invoke local` environment.
+              process.env['IS_LOCAL'] = true;
             }
             /* eslint-enable dot-notation */
 
