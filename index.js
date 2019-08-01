@@ -182,7 +182,9 @@ class mochaPlugin {
       // Verify that the service runtime matches with the current runtime
       let { runtime } = inited.provider;
       // Fix the real version for node10
-      runtime = runtime.replace('.x', '');
+      if (runtime) {
+        runtime = runtime.replace('.x', '');
+      }
 
       let nodeVersion;
       if (typeof process.versions === 'object') {
