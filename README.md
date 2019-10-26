@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/nordcloud/serverless-mocha-plugin.svg?branch=master)](https://travis-ci.org/nordcloud/serverless-mocha-plugin)
 
-A Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which
+A Serverless Plugin for the [Serverless Framework](http://www.serverless.com), which
 adds support for test driven development using [mocha](https://mochajs.org/)
 
 **THIS PLUGIN REQUIRES SERVERLESS V1!**
@@ -11,7 +11,7 @@ More familiar with Jest? Use [serverless-jest-plugin](https://github.com/sc5/ser
 
 ## Introduction
 
-This plugins does the following:
+This plugin does the following:
 
 * It provides commands to create and run tests manually
 * It provides a command to create a function, which automatically also creates a test
