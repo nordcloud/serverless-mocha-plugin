@@ -4,11 +4,15 @@ matrix:
     - name: "Node v8"
       os: linux
       node_js: '8'
-      env: TEST_SIUTE=8.10
+      env: TEST_SUITE=8.10
     - name: "Node v10"
       os: linux
       node_js: '10'
-      env: TEST_SIUTE=10.x
+      env: TEST_SUITE=10.x
+    - name: "Node v12"
+      os: linux
+      node_js: '12'
+      env: TEST_SUITE=12.x
 script:
 - npm run lint
-- npx nyc mocha -t 30000 ./test/*$TEST_SIUTE*.js
+- npx nyc mocha -t 30000 ./test/*$TEST_SUITE*.js
