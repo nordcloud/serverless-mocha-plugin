@@ -19,7 +19,7 @@ service: mocha-test-suite
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs10.x
   environment:
     STAGE: ${opt:stage}-stage-test
 
@@ -89,4 +89,3 @@ functions:
 
 plugins:
   - serverless-mocha-plugin
-  - serverless-webpack

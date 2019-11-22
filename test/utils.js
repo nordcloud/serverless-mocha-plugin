@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('chai').expect;
+const { expect } = require('chai');
 const path = require('path');
 const fse = require('fs-extra');
 const utils = require('../utils.js');
@@ -35,30 +35,25 @@ describe('utils', () => {
   });
 
   it('gets template from a file', () => {
-    const templatePath =
-      path.join(process.env.MOCHA_PLUGIN_TEST_DIR, '../', 'templates/test-template.ejs');
+    const templatePath = path.join(
+      process.env.MOCHA_PLUGIN_TEST_DIR,
+      '../',
+      'templates/test-template.ejs',
+    );
     const expectedTemplate = fse.readFileSync(templatePath, 'utf-8');
     const template = utils.getTemplateFromFile(templatePath);
     expect(template).to.be.equal(expectedTemplate);
   });
 
-  it('tests default createTestFolder', () =>
-    utils.createTestFolder().then((folder) => {
-      expect(folder).to.be.equal('test');
-    })
-  );
+  it('tests default createTestFolder', () => {
+    const folder = utils.createTestFolder();
+    expect(folder).to.be.equal('test');
+  });
 
-  it('tests default createTestFolder (exists)', () =>
-    utils.createTestFolder().then((folder) => {
-      expect(folder).to.be.equal('test');
-    })
-  );
-
-  it('tests custom createTestFolder', () =>
-    utils.createTestFolder('custom').then((folder) => {
-      expect(folder).to.be.equal('custom');
-    })
-  );
+  it('tests custom createTestFolder', () => {
+    const folder = utils.createTestFolder('custom');
+    expect(folder).to.be.equal('custom');
+  });
 
   it('tests funcNameFromPath', () => {
     const functionName = utils.funcNameFromPath('path/to/functionName.js');

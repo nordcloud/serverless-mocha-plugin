@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/nordcloud/serverless-mocha-plugin.svg?branch=master)](https://travis-ci.org/nordcloud/serverless-mocha-plugin)
 
-A Serverless Plugin for the [Serverless Framework](http://www.serverless.com) which
+A Serverless Plugin for the [Serverless Framework](http://www.serverless.com), which
 adds support for test driven development using [mocha](https://mochajs.org/)
 
 **THIS PLUGIN REQUIRES SERVERLESS V1!**
@@ -11,7 +11,7 @@ More familiar with Jest? Use [serverless-jest-plugin](https://github.com/sc5/ser
 
 ## Introduction
 
-This plugins does the following:
+This plugin does the following:
 
 * It provides commands to create and run tests manually
 * It provides a command to create a function, which automatically also creates a test
@@ -84,10 +84,10 @@ NOTE: Live running does not currently work. Need to finalize / have required env
 
 ### Running tests
 
-Tests can be run directly using the "invoke test" command. This also initializes the environment variables based on your serverless.yml file and the SERVERLESS_TEST_ROOT variable that defines the root for the code to be tested.
+Tests can be run directly using the "invoke test" command. This also initializes the environment variables based on your serverless.yml file and the SERVERLESS_TEST_ROOT variable that defines the root for the code to be tested. If you're running the tests locally (rather than on live Lambdas, as described below), it will also set the `IS_LOCAL` to `'true'` to match the behavior of [`sls invoke local`](https://serverless.com/framework/docs/providers/aws/cli-reference/invoke-local#environment).
 
 ```
-sls invoke test [--stage stage] [--region region] [-f function1] [-f function2] [...]
+sls invoke test [--stage stage] [--region region] [-t timeout] [-f function1] [-f function2] [...]
 ```
 
 To use a mocha reporter (e.g. json), use the -R switch. Reporter options can be passed with the -O switch.
@@ -109,7 +109,7 @@ To run tests live against the actual deployed Lambdas, use the '--live' or '-l' 
 To run tests e.g. against built artefacts that reside in some other directory, use the '--root' or '-r' switch. e.g.
 ```
   sls webpack -o testBuild
-  sls invoke test -r testBuild
+  sls invoke test --root testBuild
   rm -rf testBuild
 ```
 
@@ -180,8 +180,27 @@ Sample stopOffline.sh
 kill `cat .offline.pid`
 rm .offline.pid
 ```
+
+### Usage with [babel register](https://babeljs.io/docs/en/babel-register)
+
+If you use mocha with [babel compiler](https://github.com/mochajs/mocha/wiki/compilers-deprecation) e.g. `sls invoke test --compilers js:@babel/register` \
+Babel configuration can be determined with the custom `babelOptions` configuration in serverless.yml
+
+```
+custom:
+  serverless-mocha-plugin:
+    babelOptions:
+      presets: [["@babel/env", { "targets": { "node": "8.10" }, "shippedProposals": true, "useBuiltIns": "usage" }]]
+      plugins:
+        - ["@babel/plugin-transform-runtime"]
+```
 ## Release History (1.x)
 
+* 2019/07/25 - v1.11.0 - support for node10
+                         deprecated node6
+* 2019/04/02 - v1.10.0 - add timeout parameter
+                         add babel options
+* 2018/12/15 - v1.9.1 - fix to work with serverless 1.33 and later
 * 2018/09/16 - v1.9.0 - add support for --exit option
 * 2018/04/03 - v1.8.0 - add support for Node 8
 * 2017/09/10 - v1.7.0 - ability to run scripts before / after tests
