@@ -12,9 +12,8 @@ describe('<%= functionName %>', () => {
     done();
   });
 
-  it('implement tests here', () => {
-    return wrapped.run({}).then((response) => {
-      expect(response).to.not.be.empty;
-    });
+  it('implement tests here', async () => {
+    const response = await wrapped.run({});
+    expect(response).to.not.be.empty;
   });
 });
