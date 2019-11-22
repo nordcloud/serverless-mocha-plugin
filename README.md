@@ -74,13 +74,13 @@ Functions can also be added manually using the mocha-create command
 sls create test -f functionName
 ```
 
-If you want to run the tests against the real Lambda functions, you can pass the liveFunction object to wrapper.init().
+If you want to run the tests against the real Lambda functions, you can `initLiveModule()` instead of `getWrapper()`. You can also use `--live` flag and then you don't need to change your tests.
 
 ```
-  wrapper.init(liveFunction);
+  let wrapped = mochaPlugin.initLiveModule('myLambdaFunctionName');
 ```
 
-NOTE: Live running does not currently work. Need to finalize / have required env variables available
+`initLiveModule()` and `getWrapper()` are helper methods to initialize [lambda-wrapper](https://github.com/nordcloud/lambda-wrapper), which is used under the hood. Both methods return wrapped function, which can be invoked with `.run({})` method and takes event object as an argument.
 
 ### Running tests
 
