@@ -293,11 +293,12 @@ class mochaPlugin {
 
             const { compilers } = myModule.options;
             if (typeof compilers !== 'undefined') {
-              const extensions = ['js'];
               myModule.options.compilers.split(',').filter(e => e !== '').forEach((c) => {
+                // Splitting only to preserve backwards
+                // compatibility.
                 const split = c.split(/:(.+)/);
                 const ext = split[0];
-                let mod = split[1];
+                let mod = split[1] || ext;
 
                 if (mod[0] === '.') {
                   mod = path.join(process.cwd(), mod);
@@ -314,7 +315,6 @@ class mochaPlugin {
                   require(mod); // eslint-disable-line global-require
                   /* eslint-enable import/no-dynamic-require */
                 }
-                extensions.push(ext);
               });
             }
             return null;
