@@ -23,6 +23,7 @@ const functionTemplateFile = path.join('templates', 'function-template.ejs');
 const validFunctionRuntimes = [
   'aws-nodejs8.10',
   'aws-nodejs10.x',
+  'aws-nodejs12.x',
 ];
 
 const humanReadableFunctionRuntimes = `${validFunctionRuntimes
@@ -323,7 +324,7 @@ class mochaPlugin {
           mocha.run((failures) => {
             process.on('exit', () => {
               myModule.runScripts('postTestCommands')
-              // exit with non-zero status if there were failures
+                // exit with non-zero status if there were failures
                 .then(() => process.exit(failures));
             });
             if (myModule.options.exit) {
