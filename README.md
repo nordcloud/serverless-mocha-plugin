@@ -196,6 +196,8 @@ custom:
 ```
 ## Release History (1.x)
 
+* 2019/11/xx - v1.12.0 - support for node12
+                         fix --compiler option parsing
 * 2019/07/25 - v1.11.0 - support for node10
                          deprecated node6
 * 2019/04/02 - v1.10.0 - add timeout parameter
