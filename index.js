@@ -293,7 +293,7 @@ class mochaPlugin {
 
             const { compilers } = myModule.options;
             if (typeof compilers !== 'undefined') {
-              myModule.options.compilers.split(',').filter(e => e !== '').forEach(c => {
+              myModule.options.compilers.split(',').filter(e => e !== '').forEach((c) => {
                 // Splitting only to preserve backwards
                 // compatibility.
                 const split = c.split(/:(.+)/);
