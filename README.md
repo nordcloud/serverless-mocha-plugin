@@ -169,11 +169,13 @@ serverless offline 2>1 > $TMPFILE &
 PID=$!
 echo $PID > .offline.pid
 
-while ! grep "Offline listening" $TMPFILE
+while ! grep "server ready" $TMPFILE
 do sleep 1; done
 
 rm $TMPFILE
 ```
+
+**Note:** The example relies on the output of the `serverless offline` command. If the start script is not working for you, replace `"server ready"` with the string `serverless offline` prints as soon as the server is ready and listening.
 
 Sample stopOffline.sh
 ```
