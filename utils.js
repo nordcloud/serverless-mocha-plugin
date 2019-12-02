@@ -39,11 +39,11 @@ function getTestFiles(funcs, testFolder, funcList) {
   const resFuncs = {};
   if (funcFiles.length > 0) {
     funcFiles.forEach((val) => {
-      if (path.extname(val) === '.js') {
-        const base = path.basename(val).replace(/.js$/, '');
+      if (['.js', '.ts'].includes(path.extname(val))) {
+        const base = path.basename(val).replace(/(\.test)?.[tj]s$/, '');
         // Create test for non-functions only if no funcList
         if (funcs[base] || funcList.length === 0) {
-          resFuncs[base] = funcs[base] || { };
+          resFuncs[base] = funcs[base] || {};
 
           resFuncs[base].mochaPlugin = {
             testPath: path.join(getTestsFolder(testFolder), val),
