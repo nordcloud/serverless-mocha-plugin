@@ -165,7 +165,7 @@ if [ -f .offline.pid ]; then
     exit 1
 fi
 
-serverless offline 2>1 > $TMPFILE &
+serverless offline 2>&1 > $TMPFILE &
 PID=$!
 echo $PID > .offline.pid
 
