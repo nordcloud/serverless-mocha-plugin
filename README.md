@@ -5,8 +5,6 @@
 A Serverless Plugin for the [Serverless Framework](http://www.serverless.com), which
 adds support for test driven development using [mocha](https://mochajs.org/)
 
-**THIS PLUGIN REQUIRES SERVERLESS V1!**
-
 More familiar with Jest? Use [serverless-jest-plugin](https://github.com/sc5/serverless-jest-plugin).
 
 ## Introduction
