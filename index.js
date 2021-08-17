@@ -47,10 +47,12 @@ class mochaPlugin {
                 usage: 'Name of the function',
                 shortcut: 'f',
                 required: true,
+                type: 'string',
               },
               path: {
                 usage: 'Path for the tests',
                 shortcut: 'p',
+                type: 'string',
               },
             },
           },
@@ -65,17 +67,21 @@ class mochaPlugin {
                 usage: 'Name of the function',
                 shortcut: 'f',
                 required: true,
+                type: 'string',
               },
               handler: {
                 usage: 'Handler for the function (e.g. --handler my-function/index.handler)',
                 required: true,
+                type: 'string',
               },
               path: {
                 usage: 'Path for the tests (e.g. --path tests)',
                 shortcut: 'p',
+                type: 'string',
               },
               httpEvent: {
                 usage: 'Add an http endpoint (e.g. --httpEvent "verb relative-path")',
+                type: 'string',
               },
             },
           },
@@ -93,38 +99,48 @@ class mochaPlugin {
               function: {
                 usage: 'Name of the function',
                 shortcut: 'f',
+                type: 'string',
               },
               reporter: {
                 usage: 'Mocha reporter to use',
                 shortcut: 'R',
+                type: 'string',
               },
               'reporter-options': {
                 usage: 'Options for mocha reporter',
                 shortcut: 'O',
+                type: 'string',
               },
               grep: {
                 usage: 'Run only matching tests',
                 shortcut: 'G',
+                type: 'string',
               },
               live: {
                 usage: 'Run the Lambda function in AWS',
                 shortcut: 'l',
+                type: 'boolean',
               },
               root: {
                 usage: 'Service root for running tests',
+                type: 'string',
               },
               path: {
                 usage: 'Path for the tests for running tests in other than default "test" folder',
+                type: 'string',
               },
               compilers: {
                 usage: 'Compiler to use on Mocha',
+                type: 'string',
               },
               timeout: {
                 usage: 'Timeout to wait for Mocha',
                 shortcut: 't',
+                type: 'string',
               },
               exit: {
                 usage: 'force shutdown of the event loop after test run',
+                type: 'boolean',
               },
             },
           },
