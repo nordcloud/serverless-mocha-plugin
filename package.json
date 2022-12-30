@@ -59,7 +59,7 @@
     "ejs": "^2.6.2",
     "fs-extra": "^8.1.0",
     "lambda-wrapper": "^0.3.0",
-    "mocha": "^6.1.4",
+    "mocha": "^10.2.0",
     "yaml-edit": "^0.1.3"
   }
 }
